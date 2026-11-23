@@ -1,0 +1,690 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Cartas de Meteoritos</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap">
+<style>
+/* Conceito: um céu noturno onde as cartas flutuam soltas. Ao tocar numa, ela vem para o centro, cresce e gira para mostrar o verso. */
+:root {
+  color-scheme: dark;
+  --bg: #05070f;
+  --glow-a: #16214d;
+  --glow-b: #1c1044;
+  --ink: #eceffa;
+  --ink-dim: #a7aed0;
+  --line: rgba(255, 255, 255, .18);
+  --gold: #f6c61a;
+  --violet: #a98aff;
+  --pink: #ff6aae;
+  --font-display: 'Jost', 'Century Gothic', 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --cw: min(42vw, 190px);
+  scrollbar-gutter: stable;
+}
+@media (min-width: 640px) {
+  :root { --cw: clamp(150px, 17vw, 210px); }
+}
+
+body {
+  background:
+    radial-gradient(110% 70% at 50% -10%, var(--glow-a) 0%, transparent 62%),
+    radial-gradient(80% 60% at 100% 100%, var(--glow-b) 0%, transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 56px;
+}
+
+.sr {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.skip {
+  position: absolute; left: 16px; top: -80px; z-index: 40;
+  background: var(--gold); color: #1a1300; font-weight: 600;
+  padding: 10px 16px; border-radius: 10px; text-decoration: none;
+}
+.skip:focus { top: 12px; }
+
+#sky {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  z-index: 0; pointer-events: none;
+}
+#app { position: relative; z-index: 1; max-width: 1240px; margin: 0 auto; }
+
+/* Cabeçalho */
+.top { text-align: center; padding-top: 28px; }
+h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(1.35rem, 4.6vw, 2.3rem);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  padding-left: .3em;
+}
+h1 .g { color: var(--gold); font-weight: 500; }
+.meta {
+  margin: 14px 0 0;
+  font-family: var(--font-display);
+  font-size: .78rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.lead { margin: 18px auto 0; max-width: 44ch; font-size: 1.02rem; color: var(--ink); text-wrap: pretty; }
+
+/* Cartas dispostas no céu */
+.deck {
+  list-style: none; margin: 44px 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start;
+  gap: 2rem 1.5rem;
+}
+.deck li { width: var(--cw); margin-top: var(--oy, 0px); }
+.card {
+  display: block; width: 100%; margin: 0; padding: 10px 0 0; border: 0;
+  background: none; color: inherit; font: inherit; text-align: center;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.thumb {
+  display: block; width: 100%; aspect-ratio: 5 / 7;
+  border-radius: 5.6% / 4%;
+  rotate: var(--r, 0deg);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, .6), 0 0 0 1px rgba(255, 255, 255, .08);
+  animation: drift var(--d, 8s) ease-in-out var(--dl, 0s) infinite;
+  transition: rotate .4s cubic-bezier(.2, .85, .25, 1), scale .4s cubic-bezier(.2, .85, .25, 1), box-shadow .4s;
+}
+.thumb img { display: block; width: 100%; height: 100%; border-radius: inherit; object-fit: cover; -webkit-user-drag: none; }
+@keyframes drift {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -10px; }
+}
+@media (hover: hover) {
+  .card:hover .thumb { rotate: 0deg; scale: 1.06; box-shadow: 0 22px 46px rgba(0, 0, 0, .65), 0 0 46px rgba(169, 138, 255, .35); }
+}
+.card:focus-visible { outline: none; }
+.card:focus-visible .thumb { rotate: 0deg; scale: 1.06; outline: 3px solid var(--gold); outline-offset: 6px; }
+.card:active .thumb { scale: .98; }
+.cap {
+  display: block; margin-top: 18px;
+  font-family: var(--font-display); font-weight: 500;
+  font-size: .8rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.cap b { font-weight: 600; margin-right: .6em; }
+.cap .c { color: var(--violet); }
+.cap .a { color: var(--pink); }
+
+/* Carta em foco */
+.stage {
+  --fw: min(88vw, 480px, calc((100vh - 235px) * .714286));
+  --tvh: calc(100vh - 235px);
+  position: fixed; inset: 0; z-index: 20;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+  padding-top: max(16px, env(safe-area-inset-top, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+}
+@supports (height: 100dvh) {
+  .stage {
+    --fw: min(88vw, 480px, calc((100dvh - 235px) * .714286));
+    --tvh: calc(100dvh - 235px);
+  }
+}
+.backdrop {
+  position: absolute; inset: 0; z-index: -1; opacity: 0;
+  background: radial-gradient(70% 60% at 50% 45%, rgba(8, 10, 28, .55), rgba(2, 3, 9, .9));
+  transition: opacity .4s ease;
+}
+.close {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 12px);
+  right: calc(env(safe-area-inset-right, 0px) + 12px);
+  width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer;
+  border: 1px solid var(--line); background: rgba(255, 255, 255, .08); color: var(--ink);
+}
+.scene {
+  position: relative; width: var(--fw); aspect-ratio: 5 / 7;
+  perspective: 1600px; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none;
+}
+.scene.grabbing { cursor: grabbing; }
+.flip {
+  position: absolute; inset: 0; transform-style: preserve-3d;
+  transition: transform .8s cubic-bezier(.22, .9, .28, 1);
+}
+.flip.dragging { transition: none; }
+.face {
+  position: absolute; inset: 0; overflow: hidden;
+  border-radius: 5.6% / 4%;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .6), 0 0 70px rgba(169, 138, 255, .2);
+}
+.face.back { transform: rotateY(180deg); }
+.face img { display: block; width: 100%; height: 100%; pointer-events: none; -webkit-user-drag: none; }
+
+.controls {
+  position: relative; width: min(92vw, 560px);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.row { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; }
+.btn {
+  min-height: 44px; padding: 0 18px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border: 1px solid var(--line); background: rgba(255, 255, 255, .08); color: var(--ink);
+  font: 500 .95rem var(--font-body); cursor: pointer;
+}
+.btn:hover:not(:disabled), .close:hover { background: rgba(255, 255, 255, .16); }
+.btn.primary { background: var(--gold); color: #1a1300; border-color: transparent; font-weight: 600; }
+.btn.primary:hover:not(:disabled) { background: #ffd43b; }
+.btn.icon { width: 44px; padding: 0; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn:focus-visible, .close:focus-visible, .textview:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.counter { min-width: 5.5ch; text-align: center; font-family: var(--font-display); letter-spacing: .12em; font-size: .85rem; color: var(--ink-dim); }
+.tip { margin: 0; text-align: center; font-size: .8rem; color: var(--ink-dim); }
+.tip-kbd { display: none; }
+@media (hover: hover) and (pointer: fine) { .tip-kbd { display: inline; } }
+
+/* Versão em texto */
+.textview {
+  position: relative; width: min(92vw, 560px); max-height: var(--tvh); overflow: auto;
+  padding: 22px 22px 20px; border: 1px solid var(--line); border-radius: 20px;
+  background: rgba(9, 12, 30, .95); font-size: 1.02rem; line-height: 1.62; text-align: left;
+  overscroll-behavior: contain;
+}
+.textview h3 { margin: 0; font: 500 1.35rem var(--font-display); letter-spacing: .12em; text-transform: uppercase; }
+.textview .tags { margin: 6px 0 0; color: var(--ink-dim); }
+.textview .chip { font-weight: 600; margin-right: .5em; }
+.textview .chip.c { color: var(--violet); }
+.textview .chip.a { color: var(--pink); }
+.textview h4 { margin: 22px 0 6px; font: 500 .78rem var(--font-display); letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
+.textview p { margin: 0; text-wrap: pretty; }
+.textview dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0; }
+.textview dt { color: var(--ink-dim); }
+.textview dd { margin: 0; min-width: 0; }
+@media (max-width: 480px) {
+  .textview dl { grid-template-columns: 1fr; gap: 0; }
+  .textview dd { margin-bottom: 8px; }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .stage { flex-direction: row; gap: 28px; --fw: calc((100vh - 40px) * .714286); --tvh: calc(100vh - 40px); }
+  .controls { width: auto; }
+  .tip { display: none; }
+  .textview { width: min(60vw, 560px); }
+}
+@supports (height: 100dvh) {
+  @media (max-height: 520px) and (orientation: landscape) {
+    .stage { --fw: calc((100dvh - 40px) * .714286); --tvh: calc(100dvh - 40px); }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumb { animation: none !important; transition: none; }
+  .flip { transition: none; }
+  .backdrop { transition-duration: .01s; }
+}
+</style>
+
+<a class="skip" href="#cartas">Pular para as cartas</a>
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<div id="app">
+  <header class="top">
+    <h1><span class="g">Ca</span>rtas de Meteoritos</h1>
+    <p class="meta">5 meteoritos · 4 países · de 1931 a 2020</p>
+    <p class="lead">Toque em uma carta para vê-la de perto. Depois, gire para ler o verso.</p>
+  </header>
+  <main id="cartas" tabindex="-1">
+    <ul class="deck" id="deck" role="list"></ul>
+    <noscript><p class="lead">Esta página precisa de JavaScript para exibir as cartas.</p></noscript>
+  </main>
+</div>
+
+<div id="stage" class="stage" role="dialog" aria-modal="true" aria-labelledby="st-title" hidden>
+  <div class="backdrop" id="backdrop"></div>
+  <h2 id="st-title" class="sr"></h2>
+  <button id="btn-close" class="close" type="button" aria-label="Fechar carta">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+
+  <div class="scene" id="scene">
+    <div class="flip" id="flip">
+      <div class="face front" id="face-front"><img id="img-front" alt="" width="640" height="896" draggable="false"></div>
+      <div class="face back" id="face-back" aria-hidden="true"><img id="img-back" alt="" width="640" height="896" draggable="false"></div>
+    </div>
+  </div>
+
+  <div class="textview" id="textview" role="region" aria-label="Texto da carta" tabindex="0" hidden></div>
+
+  <div class="controls" id="controls">
+    <div class="row">
+      <button id="btn-flip" class="btn primary" type="button">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg>
+        <span>Virar carta</span>
+      </button>
+      <button id="btn-text" class="btn" type="button" aria-expanded="false" aria-controls="textview">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        <span>Ler em texto</span>
+      </button>
+    </div>
+    <div class="row">
+      <button id="btn-prev" class="btn icon" type="button" aria-label="Carta anterior">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <span id="counter" class="counter">1 de 5</span>
+      <button id="btn-next" class="btn icon" type="button" aria-label="Próxima carta">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+    <p class="tip" id="tip"><span>Toque na carta ou arraste para girar.</span><span class="tip-kbd"> Esc fecha · ← e → trocam de carta.</span></p>
+  </div>
+
+  <div id="live" class="sr" aria-live="polite" aria-atomic="true"></div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  document.documentElement.lang = 'pt-BR';
+
+  var $ = function (s) { return document.querySelector(s); };
+  var reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var reduce = function () { return reduceMq.matches; };
+
+  /* ---------- Dados das cartas (um único lugar para editar) ---------- */
+  var CARDS = [
+    { slug: 'chelyabinsk-a', nome: 'Chelyabinsk A', codigo: 'C12', tipo: 'c', classe: 'condrito ordinário LL5',
+      frente: 'Às 9h22 do dia 15 de fevereiro de 2013, a queda desse meteorito assustou os moradores da região de Chelyabinsk, na Rússia. A onda de choque causou a quebra de janelas de casas e veículos, deixando várias pessoas feridas.',
+      verso: 'Vídeos do bólido brilhante cortando o céu, gravados por câmeras de segurança, ficaram famosos nas redes sociais. Mais de uma tonelada de material foi recuperado, incluindo a massa principal que caiu em um lago congelado.',
+      dados: [['Nome', 'Chelyabinsk A'], ['Local', 'Cheliabinsk, Oblast de Cheliabinsk - Rússia'], ['Coordenadas', `54° 49' N, 61° 7' E`], ['Queda observada', 'sim (2013)'], ['Massa', '0,559 g'], ['Dimensões', '0,91 x 0,68 x 0,50 cm'], ['Formato', 'individual'], ['Doado por', 'Carlo Bottelli (2019)']] },
+    { slug: 'santa-filomena-a', nome: 'Santa Filomena A', codigo: 'C14', tipo: 'c', classe: 'condrito ordinário LL5',
+      frente: 'Às 13h18 do dia 19 de agosto de 2020, um meteoro foi visto no céu de Pernambuco. Quatro câmeras de uma empresa de monitoramento do tempo e clima e o satélite GOES-16 registraram o bólido.',
+      verso: 'Usando os dados de vídeo, integrantes da Brazilian Meteor Observation Network (BRAMON) foram capazes de calcular a órbita e o campo de espalhamento. Assim, os fragmentos foram recuperados rapidamente, com as crostas de fusão ainda frescas.',
+      dados: [['Nome', 'Santa Filomena A'], ['Local', 'Santa Filomena, PE - Brasil'], ['Coordenadas', `8° 9' 46" S, 40° 36' 51" W`], ['Queda observada', 'sim (2020)'], ['Massa', '1,747 g'], ['Dimensões', '1,86 x 0,84 x 1,13 cm'], ['Formato', 'fragmento'], ['Doado por', 'Fabrício Oliveira (09/2020)']] },
+    { slug: 'porangaba', nome: 'Porangaba', codigo: 'C16', tipo: 'c', classe: 'condrito ordinário L4',
+      frente: 'Por volta das 17h35 do dia 9 de janeiro de 2015, um meteoro foi avistado em uma grande área de São Paulo, seguido de barulhos estrondosos de trovão. Sua queda liberou energia equivalente a 79 toneladas de dinamite.',
+      verso: 'Alguns dos fragmentos desse meteorito foram recuperados no mesmo dia, por funcionários que trabalhavam na área rural de Porangaba.',
+      dados: [['Nome', 'Porangaba'], ['Local', 'Porangaba, SP - Brasil'], ['Coordenadas', `23° 9' 36" S, 48° 10' 52" W`], ['Queda observada', 'sim (2015)'], ['Massa', '16,917 g'], ['Dimensões', '3,06 x 2,16 x 1,81 cm'], ['Formato', 'end-cut'], ['Doado por', 'José Maria Ferreira e BRAMON (03/2015)']] },
+    { slug: 'tocache', nome: 'Tocache', codigo: 'C17', tipo: 'c', classe: 'condrito ordinário H5',
+      frente: 'A queda de uma massa única desse meteorito foi vista por um casal em Tocache, na Amazônia peruana, na noite do dia 1º de janeiro de 1998. Pesando mais de 5 kg, o material foi encontrado uma semana depois, em uma plantação de café.',
+      verso: 'Por ter ficado guardado por quase 20 anos, apresenta um pouco de oxidação, além de outras marcas que contam um histórico de colisões enquanto ainda estava no espaço.',
+      dados: [['Nome', 'Tocache'], ['Queda ou encontro', 'Tocache, San Martín - Peru'], ['Coordenadas', `8° 11' 47" S, 76° 28' 38" W`], ['Queda observada', 'sim (1998)'], ['Massa', '16,770 g'], ['Dimensões', '3,82 x 2,66 x 0,86 cm'], ['Formato', 'slice'], ['Doado por', 'Gabriel Gonçalves (04/2020)']] },
+    { slug: 'tatahouine', nome: 'Tatahouine', codigo: 'A01', tipo: 'a', classe: 'acondrito diogenito (asteroide Vesta)',
+      frente: 'Famoso pela cor verde intensa dos seus cristais de ortopiroxênio, esse meteorito caiu na Tunísia em 27 de junho de 1931. Ele é um acondrito que se formou no asteroide 4 Vesta, o maior do Cinturão Principal de Asteroides.',
+      verso: 'Diversas cenas da saga Star Wars foram filmadas próximas à área em que ele caiu. Décadas após a queda, pesquisadores notaram a presença da bactéria Ramlibacter tataouinensis, até então desconhecida, em amostras dele.',
+      dados: [['Nome', 'Tatahouine'], ['Local', 'Tataouine, Província de Tataouine - Tunísia'], ['Coordenadas', `32° 57' N, 10° 25' E`], ['Queda observada', 'sim (1931)'], ['Massa', '0,393 g'], ['Dimensões', '1,13 x 0,80 x 0,30 cm'], ['Formato', 'fragmento'], ['Doado por', 'Steve Arnold (03/2016)']] }
+  ];
+  var N = CARDS.length;
+  var ROT = [-5, 3, -2, 5, -4];
+  var OFFY = [0, 26, 6, 30, 10];
+
+  var imgUrl = function (c, lado) { return 'img/' + c.slug + '-' + lado + '.webp'; };
+  var altFront = function (c) { return 'Frente da carta ' + c.codigo + ', ' + c.nome + '. Classificação: ' + c.classe + '. ' + c.frente; };
+  var altBack = function (c) {
+    return 'Verso da carta ' + c.codigo + ', ' + c.nome + '. ' + c.verso + ' ' +
+      c.dados.map(function (d) { return d[0] + ': ' + d[1] + '.'; }).join(' ');
+  };
+
+  /* ---------- Elementos ---------- */
+  var deck = $('#deck'), app = $('#app'), stage = $('#stage'), backdrop = $('#backdrop');
+  var scene = $('#scene'), flip = $('#flip'), imgF = $('#img-front'), imgB = $('#img-back');
+  var faceF = $('#face-front'), faceB = $('#face-back');
+  var btnFlip = $('#btn-flip'), btnText = $('#btn-text'), btnPrev = $('#btn-prev'), btnNext = $('#btn-next'), btnClose = $('#btn-close');
+  var counter = $('#counter'), title = $('#st-title'), live = $('#live'), textview = $('#textview'), controls = $('#controls'), tip = $('#tip');
+
+  /* ---------- Monta as cartas na tela ---------- */
+  CARDS.forEach(function (c, i) {
+    var li = document.createElement('li');
+    li.style.setProperty('--r', ROT[i % ROT.length] + 'deg');
+    li.style.setProperty('--oy', OFFY[i % OFFY.length] + 'px');
+    li.style.setProperty('--d', (6.5 + (i * 1.3) % 4).toFixed(1) + 's');
+    li.style.setProperty('--dl', (-i * 1.7).toFixed(1) + 's');
+
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'card'; b.dataset.i = String(i);
+    b.setAttribute('aria-haspopup', 'dialog');
+    b.setAttribute('aria-label', c.nome + ', carta ' + c.codigo + ', ' + c.classe);
+
+    var th = document.createElement('span'); th.className = 'thumb';
+    var im = new Image(); im.src = imgUrl(c, 'frente'); im.alt = ''; im.width = 640; im.height = 896; im.draggable = false;
+    th.appendChild(im);
+
+    var cap = document.createElement('span'); cap.className = 'cap';
+    var code = document.createElement('b'); code.className = c.tipo; code.textContent = c.codigo;
+    cap.appendChild(code); cap.appendChild(document.createTextNode(c.nome));
+
+    b.appendChild(th); b.appendChild(cap); li.appendChild(b); deck.appendChild(li);
+  });
+
+  window.addEventListener('load', function () {
+    CARDS.forEach(function (c) { var a = new Image(); a.src = imgUrl(c, 'verso'); });
+  });
+
+  /* ---------- Estado ---------- */
+  var current = -1, angle = 0, busy = false, textMode = false, drag = null;
+
+  var thumbOf = function (i) { return deck.children[i].querySelector('.thumb'); };
+  var faceOf = function (a) { return ((Math.round(a / 180) % 2) + 2) % 2 === 0 ? 'front' : 'back'; };
+  var applyAngle = function (a) { flip.style.transform = 'rotateY(' + a + 'deg)'; };
+  var say = function (msg) { live.textContent = ''; setTimeout(function () { live.textContent = msg; }, 60); };
+
+  function syncFaces() {
+    var side = faceOf(angle);
+    faceF.setAttribute('aria-hidden', side === 'front' ? 'false' : 'true');
+    faceB.setAttribute('aria-hidden', side === 'back' ? 'false' : 'true');
+    btnFlip.setAttribute('aria-label', side === 'front' ? 'Virar carta para ver o verso' : 'Virar carta para ver a frente');
+  }
+
+  function setAngle(a) {
+    var before = faceOf(angle);
+    angle = a; applyAngle(a); syncFaces();
+    var after = faceOf(a);
+    if (before !== after) say(after === 'back' ? 'Mostrando o verso.' : 'Mostrando a frente.');
+  }
+
+  function buildText(c) {
+    textview.textContent = '';
+    var add = function (tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; textview.appendChild(e); return e; };
+    add('h3', '', c.nome);
+    var tags = add('p', 'tags');
+    var chip = document.createElement('span'); chip.className = 'chip ' + c.tipo; chip.textContent = c.codigo;
+    tags.appendChild(chip); tags.appendChild(document.createTextNode(c.classe));
+    add('h4', '', 'Frente'); add('p', '', c.frente);
+    add('h4', '', 'Verso'); add('p', '', c.verso);
+    add('h4', '', 'Dados');
+    var dl = add('dl');
+    c.dados.forEach(function (d) {
+      var dt = document.createElement('dt'); dt.textContent = d[0];
+      var dd = document.createElement('dd'); dd.textContent = d[1];
+      dl.appendChild(dt); dl.appendChild(dd);
+    });
+  }
+
+  function fill(i) {
+    var c = CARDS[i];
+    imgF.src = imgUrl(c, 'frente'); imgF.alt = altFront(c);
+    imgB.src = imgUrl(c, 'verso'); imgB.alt = altBack(c);
+    title.textContent = c.nome + ', carta ' + c.codigo;
+    counter.textContent = (i + 1) + ' de ' + N;
+    buildText(c);
+  }
+
+  function decodeBoth() {
+    var p = Promise.all([imgF.decode(), imgB.decode()]).catch(function () {});
+    var t = new Promise(function (r) { setTimeout(r, 700); });
+    return Promise.race([p, t]);
+  }
+
+  function setTextMode(on) {
+    textMode = on;
+    textview.hidden = !on; scene.hidden = on; tip.hidden = on;
+    btnFlip.disabled = on;
+    btnText.setAttribute('aria-expanded', on ? 'true' : 'false');
+    btnText.querySelector('span').textContent = on ? 'Ver a carta' : 'Ler em texto';
+    if (on) textview.scrollTop = 0;
+  }
+
+  function thumbState(th) {
+    var r = th.getBoundingClientRect(), cs = getComputedStyle(th);
+    var rot = parseFloat(cs.rotate) || 0;
+    var scl = parseFloat(cs.scale) || 1;
+    return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: th.offsetWidth * scl, rot: rot };
+  }
+
+  function flipTransform(st, sr) {
+    var s = st.w / sr.width;
+    var dx = st.cx - (sr.left + sr.width / 2), dy = st.cy - (sr.top + sr.height / 2);
+    return 'translate(' + dx + 'px,' + dy + 'px) rotate(' + st.rot + 'deg) scale(' + s + ')';
+  }
+
+  var done = function (anim) { return anim.finished.catch(function () {}); };
+
+  /* ---------- Abrir ---------- */
+  async function openCard(i) {
+    if (busy) return;
+    busy = true;
+    try {
+      current = i;
+      fill(i);
+      flip.style.transition = 'none'; angle = 0; applyAngle(0); void flip.offsetWidth; flip.style.transition = '';
+      syncFaces();
+      setTextMode(false);
+      await decodeBoth();
+
+      var th = thumbOf(i);
+      var from = thumbState(th);
+      th.style.animationPlayState = 'paused';
+      th.style.visibility = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      app.inert = true;
+      stage.hidden = false;
+      backdrop.style.opacity = '0'; void backdrop.offsetWidth; backdrop.style.opacity = '1';
+      btnFlip.focus({ preventScroll: true });
+
+      var rm = reduce();
+      var sr = scene.getBoundingClientRect();
+      var anim = rm
+        ? scene.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200 })
+        : scene.animate([{ transform: flipTransform(from, sr) }, { transform: 'translate(0,0) rotate(0deg) scale(1)' }],
+            { duration: 620, easing: 'cubic-bezier(.2,.85,.25,1)' });
+      if (!rm) {
+        var k = { duration: 420, delay: 300, fill: 'backwards', easing: 'ease-out' };
+        controls.animate([{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }], k);
+        btnClose.animate([{ opacity: 0 }, { opacity: 1 }], k);
+      }
+      say('Carta ' + (i + 1) + ' de ' + N + ': ' + CARDS[i].nome + ', mostrando a frente.');
+      await done(anim);
+    } finally { busy = false; }
+  }
+
+  /* ---------- Fechar ---------- */
+  async function closeCard() {
+    if (busy || current < 0) return;
+    busy = true;
+    try {
+      if (textMode) setTextMode(false);
+      var i = current, th = thumbOf(i);
+      var target = Math.round(angle / 360) * 360;
+      if (target !== angle) { angle = target; applyAngle(target); }
+      syncFaces();
+      th.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      var to = thumbState(th);
+      var sr = scene.getBoundingClientRect();
+      var rm = reduce();
+
+      backdrop.style.opacity = '0';
+      var a1 = controls.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, fill: 'forwards' });
+      var a2 = btnClose.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, fill: 'forwards' });
+      var anim = rm
+        ? scene.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, fill: 'forwards' })
+        : scene.animate([{ transform: 'translate(0,0) rotate(0deg) scale(1)' }, { transform: flipTransform(to, sr) }],
+            { duration: 480, easing: 'cubic-bezier(.5,0,.25,1)', fill: 'forwards' });
+      await done(anim);
+
+      stage.hidden = true;
+      anim.cancel(); a1.cancel(); a2.cancel();
+      th.style.visibility = ''; th.style.animationPlayState = '';
+      app.inert = false;
+      document.documentElement.style.overflow = '';
+      current = -1;
+      deck.children[i].querySelector('.card').focus({ preventScroll: true });
+    } finally { busy = false; }
+  }
+
+  /* ---------- Anterior / próxima ---------- */
+  async function go(dir) {
+    if (busy || current < 0) return;
+    busy = true;
+    try {
+      var n = (current + dir + N) % N;
+      var swap = function () {
+        var old = thumbOf(current);
+        old.style.visibility = ''; old.style.animationPlayState = '';
+        current = n;
+        var nt = thumbOf(n); nt.style.visibility = 'hidden'; nt.style.animationPlayState = 'paused';
+        flip.style.transition = 'none'; angle = 0; applyAngle(0); void flip.offsetWidth; flip.style.transition = '';
+        fill(n); syncFaces();
+        say('Carta ' + (n + 1) + ' de ' + N + ': ' + CARDS[n].nome + ', mostrando a frente.');
+      };
+      if (textMode) { swap(); return; }
+      var d = reduce() ? 0 : 200;
+      var out = scene.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateX(' + (-dir * 60) + 'px) scale(.96)' }],
+        { duration: d, easing: 'ease-in', fill: 'forwards' });
+      await done(out);
+      swap();
+      await decodeBoth();
+      out.cancel();
+      var inn = scene.animate([{ opacity: 0, transform: 'translateX(' + (dir * 60) + 'px) scale(.96)' }, { opacity: 1, transform: 'none' }],
+        { duration: d ? 260 : 0, easing: 'cubic-bezier(.2,.85,.25,1)' });
+      await done(inn);
+    } finally { busy = false; }
+  }
+
+  /* ---------- Eventos ---------- */
+  deck.addEventListener('click', function (e) {
+    var b = e.target.closest('.card');
+    if (b) openCard(Number(b.dataset.i));
+  });
+  btnClose.addEventListener('click', closeCard);
+  stage.addEventListener('click', function (e) { if (e.target === stage || e.target === backdrop) closeCard(); });
+  btnFlip.addEventListener('click', function () { setAngle(angle + 180); });
+  btnText.addEventListener('click', function () { setTextMode(!textMode); });
+  btnPrev.addEventListener('click', function () { go(-1); });
+  btnNext.addEventListener('click', function () { go(1); });
+
+  stage.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { e.preventDefault(); closeCard(); return; }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); return; }
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(1); return; }
+    if (e.key === 'Tab') {
+      var f = Array.prototype.filter.call(stage.querySelectorAll('button:not([disabled]), [tabindex="0"]'),
+        function (el) { return !el.closest('[hidden]'); });
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  /* Arrastar ou tocar para girar */
+  scene.addEventListener('pointerdown', function (e) {
+    if (busy || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    drag = { id: e.pointerId, x0: e.clientX, a0: angle, live: angle, moved: false, lt: performance.now(), v: 0 };
+    try { scene.setPointerCapture(e.pointerId); } catch (_) {}
+    flip.classList.add('dragging'); scene.classList.add('grabbing');
+  });
+  scene.addEventListener('pointermove', function (e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    var dx = e.clientX - drag.x0;
+    if (!drag.moved && Math.abs(dx) > 6) drag.moved = true;
+    if (!drag.moved) return;
+    var live = drag.a0 + dx / (scene.offsetWidth || 1) * 200;
+    var now = performance.now(), dt = Math.max(1, now - drag.lt);
+    drag.v = 0.8 * drag.v + 0.2 * ((live - drag.live) / dt);
+    drag.live = live; drag.lt = now;
+    applyAngle(live);
+  });
+  function endDrag(e, cancelled) {
+    if (!drag || e.pointerId !== drag.id) return;
+    var d = drag; drag = null;
+    flip.classList.remove('dragging'); scene.classList.remove('grabbing');
+    if (!d.moved) { if (!cancelled) setAngle(angle + 180); return; }
+    var proj = (d.live - d.a0) + d.v * 140;
+    var target = d.a0;
+    if (!cancelled && Math.abs(proj) > 55) target = d.a0 + 180 * (proj > 0 ? 1 : -1);
+    setAngle(target);
+  }
+  scene.addEventListener('pointerup', function (e) { endDrag(e, false); });
+  scene.addEventListener('pointercancel', function (e) { endDrag(e, true); });
+
+  /* ---------- Céu estrelado ---------- */
+  var sky = $('#sky'), ctx = sky.getContext('2d');
+  var W = 0, H = 0, stars = [], px = 0, py = 0, tx = 0, ty = 0;
+  var shoot = null, nextShoot = performance.now() + 3500, animate = !reduce(), running = false;
+  var TINTS = ['255,255,255', '190,210,255', '255,228,190'];
+  var DEPTH = [0.25, 0.55, 1];
+
+  function seed() {
+    var n = Math.round(Math.min(460, Math.max(140, innerWidth * innerHeight / 5200)));
+    stars = [];
+    for (var k = 0; k < n; k++) {
+      var layer = k < n * 0.55 ? 0 : (k < n * 0.85 ? 1 : 2);
+      stars.push({
+        x: Math.random(), y: Math.random(), layer: layer,
+        r: [0.55, 0.9, 1.5][layer] * (0.7 + Math.random() * 0.7),
+        a: [0.45, 0.65, 0.9][layer] * (0.6 + Math.random() * 0.4),
+        sp: 0.4 + Math.random() * 1.6, ph: Math.random() * 6.28,
+        tint: Math.random() < 0.18 ? 1 : (Math.random() < 0.12 ? 2 : 0)
+      });
+    }
+  }
+  function resize() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    sky.width = Math.round(W * dpr); sky.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw(performance.now());
+  }
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+    var sy = window.scrollY || 0;
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i], d = DEPTH[s.layer];
+      var x = s.x * W + px * d * 22, y = s.y * H + py * d * 14 - sy * d * 0.1;
+      x = ((x % W) + W) % W; y = ((y % H) + H) % H;
+      var a = s.a * (animate ? 0.65 + 0.35 * Math.sin(t * 0.001 * s.sp + s.ph) : 1);
+      ctx.fillStyle = 'rgba(' + TINTS[s.tint] + ',' + a.toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(x, y, s.r, 0, 6.2832); ctx.fill();
+      if (s.layer === 2) {
+        ctx.fillStyle = 'rgba(' + TINTS[s.tint] + ',' + (a * 0.12).toFixed(3) + ')';
+        ctx.beginPath(); ctx.arc(x, y, s.r * 3.2, 0, 6.2832); ctx.fill();
+      }
+    }
+    if (animate) drawShoot(t);
+  }
+  function drawShoot(t) {
+    if (!shoot) {
+      if (t < nextShoot) return;
+      var ang = (20 + Math.random() * 15) * Math.PI / 180, dir = Math.random() < 0.5 ? 1 : -1;
+      shoot = { x: W * (0.15 + Math.random() * 0.7), y: H * Math.random() * 0.35, dx: Math.cos(ang) * dir, dy: Math.sin(ang), t0: t, life: 900 };
+    }
+    var p = (t - shoot.t0) / shoot.life;
+    if (p >= 1) { shoot = null; nextShoot = t + 7000 + Math.random() * 8000; return; }
+    var hx = shoot.x + shoot.dx * 0.8 * (t - shoot.t0), hy = shoot.y + shoot.dy * 0.8 * (t - shoot.t0);
+    var tx2 = hx - shoot.dx * 150, ty2 = hy - shoot.dy * 150;
+    var g = ctx.createLinearGradient(hx, hy, tx2, ty2);
+    g.addColorStop(0, 'rgba(255,255,255,' + (0.9 * (1 - p)).toFixed(3) + ')');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.strokeStyle = g; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(tx2, ty2); ctx.stroke();
+  }
+  function frame(t) {
+    if (!animate) { running = false; return; }
+    px += (tx - px) * 0.06; py += (ty - py) * 0.06;
+    draw(t);
+    requestAnimationFrame(frame);
+  }
+  function startSky() { if (animate && !running) { running = true; requestAnimationFrame(frame); } }
+
+  seed(); resize(); startSky();
+  window.addEventListener('resize', resize);
+  window.addEventListener('pointermove', function (e) {
+    if (e.pointerType === 'touch') return;
+    tx = (e.clientX / (W || 1) - 0.5) * 2; ty = (e.clientY / (H || 1) - 0.5) * 2;
+  }, { passive: true });
+  window.addEventListener('scroll', function () { if (!animate) draw(performance.now()); }, { passive: true });
+  var onMotion = function () { animate = !reduce(); if (animate) startSky(); else draw(performance.now()); };
+  if (reduceMq.addEventListener) reduceMq.addEventListener('change', onMotion);
+})();
+</script>
+
+</body></html>
