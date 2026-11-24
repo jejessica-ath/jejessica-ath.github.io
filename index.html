@@ -1,5 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Cartas de Meteoritos</title>
+<title>Cartas de Meteoritos e Impactitos</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +16,10 @@
   --gold: #f6c61a;
   --violet: #a98aff;
   --pink: #ff6aae;
+  --red: #ff6b6b;
   --font-display: 'Jost', 'Century Gothic', 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+  /* Fonte do título: trocar por 'Space and Astronomy' quando o arquivo da fonte for incorporado. */
+  --font-title: var(--font-display);
   --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --cw: min(42vw, 190px);
   scrollbar-gutter: stable;
@@ -62,24 +64,24 @@ body {
 .top { text-align: center; padding-top: 28px; }
 h1 {
   margin: 0;
-  font-family: var(--font-display);
+  font-family: var(--font-title);
   font-weight: 300;
-  font-size: clamp(1.35rem, 4.6vw, 2.3rem);
+  font-size: clamp(1.2rem, 4.4vw, 2.2rem);
   letter-spacing: .3em;
   text-transform: uppercase;
   text-wrap: balance;
   padding-left: .3em;
 }
 h1 .g { color: var(--gold); font-weight: 500; }
-.meta {
-  margin: 14px 0 0;
-  font-family: var(--font-display);
-  font-size: .78rem;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
+.sub {
+  margin: 20px auto 0; max-width: 40ch;
+  font-family: var(--font-display); font-weight: 500;
+  font-size: clamp(.85rem, 2.8vw, 1.05rem);
+  letter-spacing: .16em; line-height: 1.5; text-transform: uppercase;
+  color: var(--ink); text-wrap: balance;
 }
-.lead { margin: 18px auto 0; max-width: 44ch; font-size: 1.02rem; color: var(--ink); text-wrap: pretty; }
+.about { margin: 14px auto 0; max-width: 52ch; font-size: .98rem; color: var(--ink-dim); text-wrap: pretty; }
+.lead { margin: 28px auto 0; max-width: 44ch; font-size: 1.02rem; color: var(--ink); text-wrap: pretty; }
 
 /* Cartas dispostas no céu */
 .deck {
@@ -121,6 +123,7 @@ h1 .g { color: var(--gold); font-weight: 500; }
 .cap b { font-weight: 600; margin-right: .6em; }
 .cap .c { color: var(--violet); }
 .cap .a { color: var(--pink); }
+.cap .n { color: var(--red); }
 
 /* Carta em foco */
 .stage {
@@ -205,6 +208,7 @@ h1 .g { color: var(--gold); font-weight: 500; }
 .textview .chip { font-weight: 600; margin-right: .5em; }
 .textview .chip.c { color: var(--violet); }
 .textview .chip.a { color: var(--pink); }
+.textview .chip.n { color: var(--red); }
 .textview h4 { margin: 22px 0 6px; font: 500 .78rem var(--font-display); letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
 .textview p { margin: 0; text-wrap: pretty; }
 .textview dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0; }
@@ -239,9 +243,10 @@ h1 .g { color: var(--gold); font-weight: 500; }
 
 <div id="app">
   <header class="top">
-    <h1><span class="g">Ca</span>rtas de Meteoritos</h1>
-    <p class="meta">5 meteoritos · 4 países · de 1931 a 2020</p>
-    <p class="lead">Toque em uma carta para vê-la de perto. Depois, gire para ler o verso.</p>
+    <h1><span class="g">Ca</span>rtas de Meteoritos e Impactitos</h1>
+    <p class="sub">Coleção de Meteoritos e Impactitos do Observatório Astronômico da UFSCar</p>
+    <p class="about">Cardset e tabuleiro feitos como parte da cartilha educativa do Projeto de Treinamento em Meteorítica da UFSCar</p>
+    <p class="lead">Toque em uma das <span id="total">22</span> cartas para vê-la de perto. Depois, gire para ler o verso.</p>
   </header>
   <main id="cartas" tabindex="-1">
     <ul class="deck" id="deck" role="list"></ul>
@@ -302,32 +307,102 @@ h1 .g { color: var(--gold); font-weight: 500; }
 
   /* ---------- Dados das cartas (um único lugar para editar) ---------- */
   var CARDS = [
-    { slug: 'chelyabinsk-a', nome: 'Chelyabinsk A', codigo: 'C12', tipo: 'c', classe: 'condrito ordinário LL5',
-      frente: 'Às 9h22 do dia 15 de fevereiro de 2013, a queda desse meteorito assustou os moradores da região de Chelyabinsk, na Rússia. A onda de choque causou a quebra de janelas de casas e veículos, deixando várias pessoas feridas.',
-      verso: 'Vídeos do bólido brilhante cortando o céu, gravados por câmeras de segurança, ficaram famosos nas redes sociais. Mais de uma tonelada de material foi recuperado, incluindo a massa principal que caiu em um lago congelado.',
-      dados: [['Nome', 'Chelyabinsk A'], ['Local', 'Cheliabinsk, Oblast de Cheliabinsk - Rússia'], ['Coordenadas', `54° 49' N, 61° 7' E`], ['Queda observada', 'sim (2013)'], ['Massa', '0,559 g'], ['Dimensões', '0,91 x 0,68 x 0,50 cm'], ['Formato', 'individual'], ['Doado por', 'Carlo Bottelli (2019)']] },
-    { slug: 'santa-filomena-a', nome: 'Santa Filomena A', codigo: 'C14', tipo: 'c', classe: 'condrito ordinário LL5',
-      frente: 'Às 13h18 do dia 19 de agosto de 2020, um meteoro foi visto no céu de Pernambuco. Quatro câmeras de uma empresa de monitoramento do tempo e clima e o satélite GOES-16 registraram o bólido.',
-      verso: 'Usando os dados de vídeo, integrantes da Brazilian Meteor Observation Network (BRAMON) foram capazes de calcular a órbita e o campo de espalhamento. Assim, os fragmentos foram recuperados rapidamente, com as crostas de fusão ainda frescas.',
-      dados: [['Nome', 'Santa Filomena A'], ['Local', 'Santa Filomena, PE - Brasil'], ['Coordenadas', `8° 9' 46" S, 40° 36' 51" W`], ['Queda observada', 'sim (2020)'], ['Massa', '1,747 g'], ['Dimensões', '1,86 x 0,84 x 1,13 cm'], ['Formato', 'fragmento'], ['Doado por', 'Fabrício Oliveira (09/2020)']] },
-    { slug: 'porangaba', nome: 'Porangaba', codigo: 'C16', tipo: 'c', classe: 'condrito ordinário L4',
-      frente: 'Por volta das 17h35 do dia 9 de janeiro de 2015, um meteoro foi avistado em uma grande área de São Paulo, seguido de barulhos estrondosos de trovão. Sua queda liberou energia equivalente a 79 toneladas de dinamite.',
-      verso: 'Alguns dos fragmentos desse meteorito foram recuperados no mesmo dia, por funcionários que trabalhavam na área rural de Porangaba.',
-      dados: [['Nome', 'Porangaba'], ['Local', 'Porangaba, SP - Brasil'], ['Coordenadas', `23° 9' 36" S, 48° 10' 52" W`], ['Queda observada', 'sim (2015)'], ['Massa', '16,917 g'], ['Dimensões', '3,06 x 2,16 x 1,81 cm'], ['Formato', 'end-cut'], ['Doado por', 'José Maria Ferreira e BRAMON (03/2015)']] },
-    { slug: 'tocache', nome: 'Tocache', codigo: 'C17', tipo: 'c', classe: 'condrito ordinário H5',
-      frente: 'A queda de uma massa única desse meteorito foi vista por um casal em Tocache, na Amazônia peruana, na noite do dia 1º de janeiro de 1998. Pesando mais de 5 kg, o material foi encontrado uma semana depois, em uma plantação de café.',
-      verso: 'Por ter ficado guardado por quase 20 anos, apresenta um pouco de oxidação, além de outras marcas que contam um histórico de colisões enquanto ainda estava no espaço.',
-      dados: [['Nome', 'Tocache'], ['Queda ou encontro', 'Tocache, San Martín - Peru'], ['Coordenadas', `8° 11' 47" S, 76° 28' 38" W`], ['Queda observada', 'sim (1998)'], ['Massa', '16,770 g'], ['Dimensões', '3,82 x 2,66 x 0,86 cm'], ['Formato', 'slice'], ['Doado por', 'Gabriel Gonçalves (04/2020)']] },
-    { slug: 'tatahouine', nome: 'Tatahouine', codigo: 'A01', tipo: 'a', classe: 'acondrito diogenito (asteroide Vesta)',
-      frente: 'Famoso pela cor verde intensa dos seus cristais de ortopiroxênio, esse meteorito caiu na Tunísia em 27 de junho de 1931. Ele é um acondrito que se formou no asteroide 4 Vesta, o maior do Cinturão Principal de Asteroides.',
-      verso: 'Diversas cenas da saga Star Wars foram filmadas próximas à área em que ele caiu. Décadas após a queda, pesquisadores notaram a presença da bactéria Ramlibacter tataouinensis, até então desconhecida, em amostras dele.',
-      dados: [['Nome', 'Tatahouine'], ['Local', 'Tataouine, Província de Tataouine - Tunísia'], ['Coordenadas', `32° 57' N, 10° 25' E`], ['Queda observada', 'sim (1931)'], ['Massa', '0,393 g'], ['Dimensões', '1,13 x 0,80 x 0,30 cm'], ['Formato', 'fragmento'], ['Doado por', 'Steve Arnold (03/2016)']] }
+    { slug: "dhofar-020-a", nome: "Dhofar 020 A", codigo: "C01", tipo: "c", classe: "condrito ordinário H4-5",
+      frente: "Este meteorito foi encontrado na região de Dófar, em Omã, no ano 2000. Classificado como um condrito ordinário, milhares de pedaços individuais bem oxidados foram encontrados, totalizando mais de 250 kg.",
+      verso: "Porém, existe pouca informação disponível sobre as condições nas quais foram coletados.",
+      dados: [["Nome", "Dhofar 020 A"], ["Local", "Dófar - Omã"], ["Coordenadas", "19° 2' N, 54° 31' E"], ["Queda observada", "não"], ["Massa", "4,896 g"], ["Dimensões", "2,53 x 1,63 x 0,84 cm"], ["Formato", "individual"], ["Doado por", "Rob Holcomb (02/2016)"]] },
+    { slug: "dhofar-020-b", nome: "Dhofar 020 B", codigo: "C02", tipo: "c", classe: "condrito ordinário H4-5",
+      frente: "Este meteorito foi encontrado na região de Dófar, em Omã, no ano 2000. Classificado como um condrito ordinário, milhares de pedaços individuais bem oxidados foram encontrados, totalizando mais de 250 kg.",
+      verso: "Porém, existe pouca informação disponível sobre as condições nas quais foram coletados.",
+      dados: [["Nome", "Dhofar 020 B"], ["Local", "Dófar - Omã"], ["Coordenadas", "19° 2' N, 54° 31' E"], ["Queda observada", "não"], ["Massa", "8,186 g"], ["Dimensões", "2,67 x 2,26 x 1,04 cm"], ["Formato", "individual"], ["Doado por", "Rob Holcomb (02/2016)"]] },
+    { slug: "dhofar-020-c", nome: "Dhofar 020 C", codigo: "C03", tipo: "c", classe: "condrito ordinário H4-5",
+      frente: "Este meteorito foi encontrado na região de Dófar, em Omã, no ano 2000. Classificado como um condrito ordinário, milhares de pedaços individuais bem oxidados foram encontrados, totalizando mais de 250 kg.",
+      verso: "Porém, existe pouca informação disponível sobre as condições nas quais foram coletados.",
+      dados: [["Nome", "Dhofar 020 C"], ["Local", "Dófar - Omã"], ["Coordenadas", "19° 2' N, 54° 31' E"], ["Queda observada", "não"], ["Massa", "7,94 g"], ["Dimensões", "3,00 x 1,90 x 1,13 cm"], ["Formato", "individual"], ["Doado por", "Rob Holcomb (02/2016)"]] },
+    { slug: "dhofar-020-d", nome: "Dhofar 020 D", codigo: "C04", tipo: "c", classe: "condrito ordinário H4-5",
+      frente: "Este meteorito foi encontrado na região de Dófar, em Omã, no ano 2000. Classificado como um condrito ordinário, milhares de pedaços individuais bem oxidados foram encontrados, totalizando mais de 250 kg.",
+      verso: "Porém, existe pouca informação disponível sobre as condições nas quais foram coletados.",
+      dados: [["Nome", "Dhofar 020 D"], ["Local", "Dófar - Omã"], ["Coordenadas", "19° 2' N, 54° 31' E"], ["Queda observada", "não"], ["Massa", "7,856 g"], ["Dimensões", "2,47 x 1,77 x 1,28 cm"], ["Formato", "individual"], ["Doado por", "Rob Holcomb (02/2016)"]] },
+    { slug: "dhofar-020-e", nome: "Dhofar 020 E", codigo: "C05", tipo: "c", classe: "condrito ordinário H4-5",
+      frente: "Este meteorito foi encontrado na região de Dófar, em Omã, no ano 2000. Classificado como um condrito ordinário, milhares de pedaços individuais bem oxidados foram encontrados, totalizando mais de 250 kg.",
+      verso: "Porém, existe pouca informação disponível sobre as condições nas quais foram coletados.",
+      dados: [["Nome", "Dhofar 020 E"], ["Local", "Dófar - Omã"], ["Coordenadas", "19° 2' N, 54° 31' E"], ["Queda observada", "não"], ["Massa", "4,729 g"], ["Dimensões", "1,99 x 1,70 x 1,30 cm"], ["Formato", "individual"], ["Doado por", "Rob Holcomb (02/2016)"]] },
+    { slug: "dhofar-020-f", nome: "Dhofar 020 F", codigo: "C06", tipo: "c", classe: "condrito ordinário H4-5",
+      frente: "Este meteorito foi encontrado na região de Dófar, em Omã, no ano 2000. Classificado como um condrito ordinário, milhares de pedaços individuais bem oxidados foram encontrados, totalizando mais de 250 kg.",
+      verso: "Porém, existe pouca informação disponível sobre as condições nas quais foram coletados.",
+      dados: [["Nome", "Dhofar 020 F"], ["Local", "Dófar - Omã"], ["Coordenadas", "19° 2' N, 54° 31' E"], ["Queda observada", "não"], ["Massa", "3,68 g"], ["Dimensões", "2,35 x 1,61 x 0,63 cm"], ["Formato", "individual"], ["Doado por", "Rob Holcomb (02/2016)"]] },
+    { slug: "dhofar-020-g", nome: "Dhofar 020 G", codigo: "C07", tipo: "c", classe: "condrito ordinário H4-5",
+      frente: "Este meteorito foi encontrado na região de Dófar, em Omã, no ano 2000. Classificado como um condrito ordinário, milhares de pedaços individuais bem oxidados foram encontrados, totalizando mais de 250 kg.",
+      verso: "Porém, existe pouca informação disponível sobre as condições nas quais foram coletados.",
+      dados: [["Nome", "Dhofar 020 G"], ["Local", "Dófar - Omã"], ["Coordenadas", "19° 2' N, 54° 31' E"], ["Queda observada", "não"], ["Massa", "8,282 g"], ["Dimensões", "3,01 x 1,86 x 1,05 cm"], ["Formato", "individual"], ["Doado por", "Rob Holcomb (02/2016)"]] },
+    { slug: "dhofar-021", nome: "Dhofar 021", codigo: "C08", tipo: "c", classe: "condrito ordinário H5-6",
+      frente: "Este meteorito foi encontrado na região de Dófar, em Omã, no ano 2000. Classificado como um condrito ordinário, esta é uma das 10 amostras encontradas, que totalizam cerca de 2,5 kg.",
+      verso: "Existe pouca informação disponível sobre as condições nas quais foi encontrado. O material se apresenta muito oxidado.",
+      dados: [["Nome", "Dhofar 021"], ["Local", "Dófar - Omã"], ["Coordenadas", "18° 9' 12\" N, 54° 10' 42\" E"], ["Queda observada", "não"], ["Massa", "47,811 g"], ["Dimensões", "4,31 x 3,20 x 2,16 cm"], ["Formato", "individual"], ["Doado por", "Rob Holcomb (02/2016)"]] },
+    { slug: "dhofar-024-a", nome: "Dhofar 024 A", codigo: "C09", tipo: "c", classe: "condrito ordinário H3.9",
+      frente: "Este meteorito foi encontrado na região de Dófar, em Omã, no ano 2000. Classificado como um condrito ordinário, menos de 200 g desse meteorito são conhecidos.",
+      verso: "Existe pouca informação sobre as condições nas quais foi encontrado. O material se apresenta moderadamente oxidado.",
+      dados: [["Nome", "Dhofar 024 A"], ["Local", "Dófar - Omã"], ["Coordenadas", "19° 3' 42\" N, 54° 33' 12\" E"], ["Queda observada", "não"], ["Massa", "19,632 g"], ["Dimensões", "3,49 x 2,29 x 2,34 cm"], ["Formato", "individual"], ["Doado por", "Rob Holcomb (02/2016)"]] },
+    { slug: "dhofar-024-b", nome: "Dhofar 024 B", codigo: "C10", tipo: "c", classe: "condrito ordinário H3.9",
+      frente: "Este meteorito foi encontrado na região de Dófar, em Omã, no ano 2000. Classificado como um condrito ordinário, menos de 200 g desse meteorito são conhecidos.",
+      verso: "Existe pouca informação sobre as condições nas quais foi encontrado. O material se apresenta moderadamente oxidado.",
+      dados: [["Nome", "Dhofar 024 B"], ["Local", "Dófar - Omã"], ["Coordenadas", "19° 3' 42\" N, 54° 33' 12\" E"], ["Queda observada", "não"], ["Massa", "30,329 g"], ["Dimensões", "3,72 x 3,10 x 1,83 cm"], ["Formato", "individual"], ["Doado por", "Rob Holcomb (02/2016)"]] },
+    { slug: "dhofar-024-c", nome: "Dhofar 024 C", codigo: "C11", tipo: "c", classe: "condrito ordinário H3.9",
+      frente: "Este meteorito foi encontrado na região de Dófar, em Omã, no ano 2000. Classificado como um condrito ordinário, menos de 200 g desse meteorito são conhecidos.",
+      verso: "Existe pouca informação sobre as condições nas quais foi encontrado. O material se apresenta moderadamente oxidado.",
+      dados: [["Nome", "Dhofar 024 C"], ["Local", "Dófar - Omã"], ["Coordenadas", "19° 3' 42\" N, 54° 33' 12\" E"], ["Queda observada", "não"], ["Massa", "40,685 g"], ["Dimensões", "3,31 x 2,71 x 2,42 cm"], ["Formato", "individual"], ["Doado por", "Rob Holcomb (02/2016)"]] },
+    { slug: "chelyabinsk-a", nome: "Chelyabinsk A", codigo: "C12", tipo: "c", classe: "condrito ordinário LL5",
+      frente: "Às 9h22 do dia 15 de fevereiro de 2013, a queda desse meteorito assustou os moradores da região de Chelyabinsk, na Rússia. A onda de choque causou a quebra de janelas de casas e veículos, deixando várias pessoas feridas.",
+      verso: "Vídeos do bólido brilhante cortando o céu, gravados por câmeras de segurança, ficaram famosos nas redes sociais. Mais de uma tonelada de material foi recuperado, incluindo a massa principal que caiu em um lago congelado.",
+      dados: [["Nome", "Chelyabinsk A"], ["Local", "Cheliabinsk, Oblast de Cheliabinsk - Rússia"], ["Coordenadas", "54° 49' N, 61° 7' E"], ["Queda observada", "sim (2013)"], ["Massa", "0,559 g"], ["Dimensões", "0,91 x 0,68 x 0,50 cm"], ["Formato", "individual"], ["Doado por", "Carlo Bottelli (2019)"]] },
+    { slug: "chelyabinsk-b", nome: "Chelyabinsk B", codigo: "C13", tipo: "c", classe: "condrito ordinário LL5",
+      frente: "Às 9h22 do dia 15 de fevereiro de 2013, a queda desse meteorito assustou os moradores da região de Chelyabinsk, na Rússia. A onda de choque causou a quebra de janelas de casas e veículos, deixando várias pessoas feridas.",
+      verso: "Vídeos do bólido brilhante cortando o céu, gravados por câmeras de segurança, ficaram famosos nas redes sociais. Mais de uma tonelada de material foi recuperado, incluindo a massa principal que caiu em um lago congelado.",
+      dados: [["Nome", "Chelyabinsk B"], ["Local", "Cheliabinsk, Oblast de Cheliabinsk - Rússia"], ["Coordenadas", "54° 49' N, 61° 7' E"], ["Queda observada", "sim (2013)"], ["Massa", "0,024 g"], ["Dimensões", "0,29 x 0,21 x 0,26 cm"], ["Formato", "individual"], ["Doado por", "Eron Trindade e Jéssica Athos (25/11/2023)"]] },
+    { slug: "santa-filomena-a", nome: "Santa Filomena A", codigo: "C14", tipo: "c", classe: "condrito ordinário LL5",
+      frente: "Às 13h18 do dia 19 de agosto de 2020, um meteoro foi visto no céu de Pernambuco. Quatro câmeras de uma empresa de monitoramento do tempo e clima e o satélite GOES-16 registraram o bólido.",
+      verso: "Usando os dados de vídeo, integrantes da Brazilian Meteor Observation Network (BRAMON) foram capazes de calcular a órbita e o campo de espalhamento. Assim, os fragmentos foram recuperados rapidamente, com as crostas de fusão ainda frescas.",
+      dados: [["Nome", "Santa Filomena A"], ["Local", "Santa Filomena, PE - Brasil"], ["Coordenadas", "8° 9' 46\" S, 40° 36' 51\" W"], ["Queda observada", "sim (2020)"], ["Massa", "1,747 g"], ["Dimensões", "1,86 x 0,84 x 1,13 cm"], ["Formato", "fragmento"], ["Doado por", "Fabrício Oliveira (09/2020)"]] },
+    { slug: "santa-filomena-b", nome: "Santa Filomena B", codigo: "C15", tipo: "c", classe: "condrito ordinário LL5",
+      frente: "Às 13h18 do dia 19 de agosto de 2020, um meteoro foi visto no céu de Pernambuco. Quatro câmeras de uma empresa de monitoramento do tempo e clima e o satélite GOES-16 registraram o bólido.",
+      verso: "Usando os dados de vídeo, integrantes da Brazilian Meteor Observation Network (BRAMON) foram capazes de calcular a órbita e o campo de espalhamento. Assim, os fragmentos foram recuperados rapidamente, com as crostas de fusão ainda frescas.",
+      dados: [["Nome", "Santa Filomena B"], ["Local", "Santa Filomena, PE - Brasil"], ["Coordenadas", "8° 9' 46\" S, 40° 36' 51\" W"], ["Queda observada", "sim (2020)"], ["Massa", "1,054 g"], ["Dimensões", "1,46 x 0,97 x 0,74 cm"], ["Formato", "fragmento"], ["Doado por", "José Wendel Viana Gomes (INOVE Stones) (04/2022)"]] },
+    { slug: "porangaba", nome: "Porangaba", codigo: "C16", tipo: "c", classe: "condrito ordinário L4",
+      frente: "Por volta das 17h35 do dia 9 de janeiro de 2015, um meteoro foi avistado em uma grande área de São Paulo, seguido de barulhos estrondosos de trovão. Sua queda liberou energia equivalente a 79 toneladas de dinamite.",
+      verso: "Alguns dos fragmentos desse meteorito foram recuperados no mesmo dia, por funcionários que trabalhavam na área rural de Porangaba.",
+      dados: [["Nome", "Porangaba"], ["Local", "Porangaba, SP - Brasil"], ["Coordenadas", "23° 9' 36\" S, 48° 10' 52\" W"], ["Queda observada", "sim (2015)"], ["Massa", "16,917 g"], ["Dimensões", "3,06 x 2,16 x 1,81 cm"], ["Formato", "end-cut"], ["Doado por", "José Maria Ferreira e BRAMON (03/2015)"]] },
+    { slug: "tocache", nome: "Tocache", codigo: "C17", tipo: "c", classe: "condrito ordinário H5",
+      frente: "A queda de uma massa única desse meteorito foi vista por um casal em Tocache, na Amazônia peruana, na noite do dia 1º de janeiro de 1998. Pesando mais de 5 kg, o material foi encontrado uma semana depois, em uma plantação de café.",
+      verso: "Por ter ficado guardado por quase 20 anos, apresenta um pouco de oxidação, além de outras marcas que contam um histórico de colisões enquanto ainda estava no espaço.",
+      dados: [["Nome", "Tocache"], ["Queda ou encontro", "Tocache, San Martín - Peru"], ["Coordenadas", "8° 11' 47\" S, 76° 28' 38\" W"], ["Queda observada", "sim (1998)"], ["Massa", "16,770 g"], ["Dimensões", "3,82 x 2,66 x 0,86 cm"], ["Formato", "slice"], ["Doado por", "Gabriel Gonçalves (04/2020)"]] },
+    { slug: "nwa-10574", nome: "NWA 10574 (Jrifia Boujdour)", curto: "NWA 10574", codigo: "C18", tipo: "c", classe: "condrito carbonáceo CM2",
+      frente: "Várias amostras desse meteorito carbonáceo foram encontradas no deserto no Marrocos e adquiridas em 2016 por comerciantes de meteoritos. Análises indicam que ele sofreu influência de água durante sua formação no meio interplanetário.",
+      verso: "Possui diversas moléculas orgânicas formadas antes do planeta Terra, além de grãos microscópicos que precedem a formação do Sistema Solar.",
+      dados: [["Nome", "NWA 10574 (Jrifia Boujdour)"], ["Local", "Noroeste da África (Deserto do Saara)"], ["Coordenadas", "desconhecidas"], ["Queda observada", "não"], ["Massa", "2,053 g"], ["Dimensões", "1,63 x 0,92 x 1,04 cm"], ["Formato", "individual"], ["Doado por", "Steve Arnold (03/2016)"]] },
+    { slug: "nwa-xxx-c20", nome: "NWA XXX", codigo: "C20", tipo: "c", classe: "condrito não classificado",
+      frente: "Meteoritos recebem o nome do local onde caem. Devido à escassez de vegetação e chuvas, uma grande quantidade deles é encontrada no deserto do Saara, em uma vasta área com poucas referências geográficas.",
+      verso: "NWA é o acrônimo de “Northwest Africa”, cuja tradução é “Noroeste da África”. Aqueles que são classificados recebem, junto à sigla NWA, uma numeração única, enquanto os demais são chamados coletivamente de “NWA XXX”.",
+      dados: [["Nome", "NWA XXX"], ["Local", "Noroeste da África (Deserto do Saara)"], ["Coordenadas", "desconhecidas"], ["Queda observada", "não"], ["Massa", "51,585 g"], ["Dimensões", "8,37 x 7,99 x 0,34 cm"], ["Formato", "slice"], ["Doado por", "Carlo Bottelli (14/07/2025)"]] },
+    { slug: "nwa-869", nome: "NWA 869", codigo: "C21", tipo: "c", classe: "condrito ordinário L3-6",
+      frente: "Por volta de 1999, caçadores de meteoritos no noroeste da África descobriram um grande campo de espalhamento, com pelo menos 2 toneladas de material.",
+      verso: "Possivelmente, diferentes itens identificados como NWA 869 não façam parte da mesma queda, embora os comerciantes sejam confiantes de que a maioria das massas conhecidas são distintas de outros meteoritos NWA.",
+      dados: [["Nome", "NWA 869"], ["Local", "Noroeste da África (Deserto do Saara)"], ["Coordenadas", "desconhecidas"], ["Queda observada", "não"], ["Massa", "2,392 g"], ["Dimensões", "1,23 x 1,21 x 1,00 cm"], ["Formato", "individual"], ["Doado por", "Ângelo Alves (The Naturalist) (14/07/2025)"]] },
+    { slug: "tatahouine", nome: "Tatahouine", codigo: "A01", tipo: "a", classe: "acondrito diogenito (asteroide Vesta)",
+      frente: "Famoso pela cor verde intensa dos seus cristais de ortopiroxênio, esse meteorito caiu na Tunísia em 27 de junho de 1931. Ele é um acondrito que se formou no asteroide 4 Vesta, o maior do Cinturão Principal de Asteroides.",
+      verso: "Diversas cenas da saga Star Wars foram filmadas próximas à área em que ele caiu. Décadas após a queda, pesquisadores notaram a presença da bactéria Ramlibacter tataouinensis, até então desconhecida, em amostras dele.",
+      dados: [["Nome", "Tatahouine"], ["Local", "Tataouine, Província de Tataouine - Tunísia"], ["Coordenadas", "32° 57' N, 10° 25' E"], ["Queda observada", "sim (1931)"], ["Massa", "0,393 g"], ["Dimensões", "1,13 x 0,80 x 0,30 cm"], ["Formato", "fragmento"], ["Doado por", "Steve Arnold (03/2016)"]] },
+    { slug: "nwa-xxx-n01", nome: "NWA XXX", codigo: "N01", tipo: "n", classe: "não classificado",
+      frente: "Meteoritos recebem o nome do local onde caem. Devido à escassez de vegetação e chuvas, uma grande quantidade deles é encontrada no deserto do Saara, em uma vasta área com poucas referências geográficas.",
+      verso: "NWA é o acrônimo de “Northwest Africa”, cuja tradução é “Noroeste da África”. Aqueles que são classificados recebem, junto à sigla NWA, uma numeração única, enquanto os demais são chamados coletivamente de “NWA XXX”.",
+      dados: [["Nome", "NWA XXX"], ["Local", "Noroeste da África (Deserto do Saara)"], ["Coordenadas", "desconhecidas"], ["Queda observada", "não"], ["Massa", "5,723 g"], ["Dimensões", "2,63 x 1,23 x 1,16 cm"], ["Formato", "end-cut"], ["Doado por", "Rodrigo Sato"]] }
   ];
   var N = CARDS.length;
-  var ROT = [-5, 3, -2, 5, -4];
-  var OFFY = [0, 26, 6, 30, 10];
+  document.getElementById('total').textContent = String(N);
+  var ROT = [-5, 3, -2, 5, -4, 2, -3];
+  var OFFY = [0, 26, 6, 30, 10, 22, 14];
 
   var imgUrl = function (c, lado) { return 'img/' + c.slug + '-' + lado + '.webp'; };
+  var miniUrl = function (c) { return 'img/' + c.slug + '-mini.webp'; };
   var altFront = function (c) { return 'Frente da carta ' + c.codigo + ', ' + c.nome + '. Classificação: ' + c.classe + '. ' + c.frente; };
   var altBack = function (c) {
     return 'Verso da carta ' + c.codigo + ', ' + c.nome + '. ' + c.verso + ' ' +
@@ -355,12 +430,12 @@ h1 .g { color: var(--gold); font-weight: 500; }
     b.setAttribute('aria-label', c.nome + ', carta ' + c.codigo + ', ' + c.classe);
 
     var th = document.createElement('span'); th.className = 'thumb';
-    var im = new Image(); im.src = imgUrl(c, 'frente'); im.alt = ''; im.width = 640; im.height = 896; im.draggable = false;
+    var im = new Image(); im.src = miniUrl(c); im.alt = ''; im.width = 420; im.height = 588; im.draggable = false;
     th.appendChild(im);
 
     var cap = document.createElement('span'); cap.className = 'cap';
     var code = document.createElement('b'); code.className = c.tipo; code.textContent = c.codigo;
-    cap.appendChild(code); cap.appendChild(document.createTextNode(c.nome));
+    cap.appendChild(code); cap.appendChild(document.createTextNode(c.curto || c.nome));
 
     b.appendChild(th); b.appendChild(cap); li.appendChild(b); deck.appendChild(li);
   });
@@ -370,7 +445,7 @@ h1 .g { color: var(--gold); font-weight: 500; }
   });
 
   /* ---------- Estado ---------- */
-  var current = -1, angle = 0, busy = false, textMode = false, drag = null;
+  var current = -1, angle = 0, busy = false, textMode = false, drag = null, flipAnim = null;
 
   var thumbOf = function (i) { return deck.children[i].querySelector('.thumb'); };
   var faceOf = function (a) { return ((Math.round(a / 180) % 2) + 2) % 2 === 0 ? 'front' : 'back'; };
@@ -389,6 +464,31 @@ h1 .g { color: var(--gold); font-weight: 500; }
     angle = a; applyAngle(a); syncFaces();
     var after = faceOf(a);
     if (before !== after) say(after === 'back' ? 'Mostrando o verso.' : 'Mostrando a frente.');
+  }
+
+  /* Giro animado ao clicar: a carta se projeta um pouco para a frente enquanto gira. */
+  function cancelSpin() {
+    if (flipAnim) { flipAnim.cancel(); flipAnim = null; }
+    flip.style.transition = '';
+  }
+
+  function spinTo(a) {
+    if (flipAnim) return;
+    var from = angle, before = faceOf(from);
+    angle = a; syncFaces();
+    var after = faceOf(a);
+    if (before !== after) say(after === 'back' ? 'Mostrando o verso.' : 'Mostrando a frente.');
+    if (reduce() || !flip.animate) { applyAngle(a); return; }
+    flip.style.transition = 'none';
+    applyAngle(a);
+    var an = flip.animate([
+      { transform: 'rotateY(' + from + 'deg) scale(1)' },
+      { transform: 'rotateY(' + ((from + a) / 2) + 'deg) scale(1.1)', offset: 0.5 },
+      { transform: 'rotateY(' + a + 'deg) scale(1)' }
+    ], { duration: 900, easing: 'cubic-bezier(.3,.7,.2,1)' });
+    flipAnim = an;
+    var end = function () { if (flipAnim === an) flipAnim = null; flip.style.transition = ''; };
+    an.onfinish = end; an.oncancel = end;
   }
 
   function buildText(c) {
@@ -411,7 +511,9 @@ h1 .g { color: var(--gold); font-weight: 500; }
 
   function fill(i) {
     var c = CARDS[i];
-    imgF.src = imgUrl(c, 'frente'); imgF.alt = altFront(c);
+    imgF.src = miniUrl(c); imgF.alt = altFront(c);
+    var hi = new Image(); hi.src = imgUrl(c, 'frente');
+    hi.decode().then(function () { if (CARDS[current] === c) imgF.src = hi.src; }).catch(function () {});
     imgB.src = imgUrl(c, 'verso'); imgB.alt = altBack(c);
     title.textContent = c.nome + ', carta ' + c.codigo;
     counter.textContent = (i + 1) + ' de ' + N;
@@ -492,6 +594,7 @@ h1 .g { color: var(--gold); font-weight: 500; }
     busy = true;
     try {
       if (textMode) setTextMode(false);
+      cancelSpin();
       var i = current, th = thumbOf(i);
       var target = Math.round(angle / 360) * 360;
       if (target !== angle) { angle = target; applyAngle(target); }
@@ -525,6 +628,7 @@ h1 .g { color: var(--gold); font-weight: 500; }
     if (busy || current < 0) return;
     busy = true;
     try {
+      cancelSpin();
       var n = (current + dir + N) % N;
       var swap = function () {
         var old = thumbOf(current);
@@ -556,7 +660,7 @@ h1 .g { color: var(--gold); font-weight: 500; }
   });
   btnClose.addEventListener('click', closeCard);
   stage.addEventListener('click', function (e) { if (e.target === stage || e.target === backdrop) closeCard(); });
-  btnFlip.addEventListener('click', function () { setAngle(angle + 180); });
+  btnFlip.addEventListener('click', function () { spinTo(angle + 180); });
   btnText.addEventListener('click', function () { setTextMode(!textMode); });
   btnPrev.addEventListener('click', function () { go(-1); });
   btnNext.addEventListener('click', function () { go(1); });
@@ -577,7 +681,7 @@ h1 .g { color: var(--gold); font-weight: 500; }
 
   /* Arrastar ou tocar para girar */
   scene.addEventListener('pointerdown', function (e) {
-    if (busy || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    if (busy || flipAnim || (e.pointerType === 'mouse' && e.button !== 0)) return;
     drag = { id: e.pointerId, x0: e.clientX, a0: angle, live: angle, moved: false, lt: performance.now(), v: 0 };
     try { scene.setPointerCapture(e.pointerId); } catch (_) {}
     flip.classList.add('dragging'); scene.classList.add('grabbing');
@@ -597,7 +701,7 @@ h1 .g { color: var(--gold); font-weight: 500; }
     if (!drag || e.pointerId !== drag.id) return;
     var d = drag; drag = null;
     flip.classList.remove('dragging'); scene.classList.remove('grabbing');
-    if (!d.moved) { if (!cancelled) setAngle(angle + 180); return; }
+    if (!d.moved) { if (!cancelled) spinTo(angle + 180); return; }
     var proj = (d.live - d.a0) + d.v * 140;
     var target = d.a0;
     if (!cancelled && Math.abs(proj) > 55) target = d.a0 + 180 * (proj > 0 ? 1 : -1);
@@ -686,5 +790,3 @@ h1 .g { color: var(--gold); font-weight: 500; }
   if (reduceMq.addEventListener) reduceMq.addEventListener('change', onMotion);
 })();
 </script>
-
-</body></html>
