@@ -1,10 +1,23 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+/* Base da página: no Claude isso é inserido automaticamente na publicação. */
+:root { color-scheme: dark; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; font: 14px system-ui, sans-serif; }
+img { max-width: 100%; }
+</style>
+<!-- build-2026-11-23c: regra [hidden] no próprio CSS e teclado funcionando depois de clicar na carta -->
 <title>Cartas de Meteoritos e Impactitos</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap">
 <style>
 /* Conceito: um céu noturno onde as cartas flutuam soltas. Ao tocar numa, ela vem para o centro, cresce e gira para mostrar o verso. */
+[hidden] { display: none !important; }
+#stage[hidden] { display: none !important; }
 :root {
   color-scheme: dark;
   --bg: #05070f;
@@ -144,7 +157,8 @@ h1 .g { color: var(--gold); font-weight: 500; }
 }
 .backdrop {
   position: absolute; inset: 0; z-index: -1; opacity: 0;
-  background: radial-gradient(70% 60% at 50% 45%, rgba(8, 10, 28, .55), rgba(2, 3, 9, .9));
+  background: radial-gradient(70% 60% at 50% 45%, rgba(8, 10, 28, .82), rgba(2, 3, 9, .95));
+  -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);
   transition: opacity .4s ease;
 }
 .close {
@@ -238,6 +252,8 @@ h1 .g { color: var(--gold); font-weight: 500; }
 }
 </style>
 
+</head>
+<body>
 <a class="skip" href="#cartas">Pular para as cartas</a>
 <canvas id="sky" aria-hidden="true"></canvas>
 
@@ -665,7 +681,8 @@ h1 .g { color: var(--gold); font-weight: 500; }
   btnPrev.addEventListener('click', function () { go(-1); });
   btnNext.addEventListener('click', function () { go(1); });
 
-  stage.addEventListener('keydown', function (e) {
+  document.addEventListener('keydown', function (e) {
+    if (current < 0 || stage.hidden) return;
     if (e.key === 'Escape') { e.preventDefault(); closeCard(); return; }
     if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); return; }
     if (e.key === 'ArrowRight') { e.preventDefault(); go(1); return; }
@@ -674,6 +691,7 @@ h1 .g { color: var(--gold); font-weight: 500; }
         function (el) { return !el.closest('[hidden]'); });
       if (!f.length) return;
       var first = f[0], last = f[f.length - 1];
+      if (!stage.contains(document.activeElement)) { e.preventDefault(); (e.shiftKey ? last : first).focus(); return; }
       if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
       else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     }
@@ -790,3 +808,5 @@ h1 .g { color: var(--gold); font-weight: 500; }
   if (reduceMq.addEventListener) reduceMq.addEventListener('change', onMotion);
 })();
 </script>
+</body>
+</html>
