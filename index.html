@@ -9,7 +9,7 @@
 body { margin: 0; font: 14px system-ui, sans-serif; }
 img { max-width: 100%; }
 </style>
-<!-- build-2026-11-25b: holo tinge também as áreas pretas -->
+<!-- build-2026-11-25c: holo com estrelinhas de 4 pontas -->
 <title>Cartas de Meteoritos e Impactitos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -455,15 +455,14 @@ h1:focus { outline: none; }
   mix-blend-mode: screen; opacity: .42;
   animation: holomove 6s ease-in-out infinite alternate;
 }
-.holo.h2 {
-  mix-blend-mode: screen; opacity: .6;
-  background:
-    radial-gradient(circle, #fff 0 1px, rgba(255, 255, 255, 0) 2.4px) 0 0 / 31px 37px,
-    radial-gradient(circle, #fff 0 1px, rgba(255, 255, 255, 0) 2px) 13px 17px / 23px 29px;
-  animation: holotwinkle 2.8s ease-in-out infinite alternate;
+.holo.h2 { mix-blend-mode: screen; opacity: 1; background: none; animation: none; }
+.holo.h2 b {
+  position: absolute; left: var(--x); top: var(--y); width: var(--s); aspect-ratio: 1; background: #fff; opacity: 0;
+  clip-path: polygon(50% 0, 59% 41%, 100% 50%, 59% 59%, 50% 100%, 41% 59%, 0 50%, 41% 41%);
+  animation: twinkle var(--t) ease-in-out var(--dl) infinite;
 }
+@keyframes twinkle { 0%, 100% { opacity: 0; scale: .35; } 50% { opacity: .95; scale: 1; } }
 @keyframes holomove { from { background-position: 0 0, 0% 20%; } to { background-position: 0 0, 100% 80%; } }
-@keyframes holotwinkle { from { opacity: .22; } to { opacity: .65; } }
 .thumb.is-holo.holo-on .holo, .flip.holo-on .holo { display: block; }
 .tag.holo { right: auto; left: -8px; color: #1a1300; background: linear-gradient(100deg, #ff7ab8, #ffd36a, #7dffb2, #6fdcff, #b69cff); }
 .holobox {
@@ -488,6 +487,7 @@ h1:focus { outline: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .holo, .holo.h2 { animation: none; }
+  .holo.h2 b { animation: none; opacity: .75; scale: 1; }
   .tag, .bar i { animation: none; transition: none; }
   .pack-wrap.floating, .pack-wrap::before, .sheen, .pulled li::before { animation: none; }
   .secret, .pack { transition: none; }
@@ -836,7 +836,20 @@ h1:focus { outline: none; }
   var current = -1, angle = 0, busy = false, textMode = false, drag = null, flipAnim = null;
 
   /* Uma "vista" diz quais cartas estão na tela e onde: a coleção inteira ou as 5 do booster. */
-  function mkHolo(n) { var e = document.createElement('i'); e.className = 'holo' + (n === 2 ? ' h2' : ''); e.setAttribute('aria-hidden', 'true'); return e; }
+  /* poucas estrelinhas de 4 pontas, em posições e tamanhos aleatórios */
+  function scatterStars(el) {
+    el.textContent = '';
+    for (var k = 0; k < 6; k++) {
+      var b = document.createElement('b');
+      b.style.setProperty('--x', (6 + Math.random() * 84).toFixed(1) + '%');
+      b.style.setProperty('--y', (5 + Math.random() * 88).toFixed(1) + '%');
+      b.style.setProperty('--s', (2.8 + Math.random() * 3.4).toFixed(1) + '%');
+      b.style.setProperty('--t', (1.8 + Math.random() * 2.4).toFixed(1) + 's');
+      b.style.setProperty('--dl', (-Math.random() * 4).toFixed(1) + 's');
+      el.appendChild(b);
+    }
+  }
+  function mkHolo(n) { var e = document.createElement('i'); e.className = 'holo' + (n === 2 ? ' h2' : ''); e.setAttribute('aria-hidden', 'true'); if (n === 2) scatterStars(e); return e; }
   function addHolo(th, on) { th.classList.add('is-holo'); if (on) th.classList.add('holo-on'); th.appendChild(mkHolo(1)); th.appendChild(mkHolo(2)); }
 
   function makeView(ul, list, holoFn) {
@@ -921,6 +934,7 @@ h1:focus { outline: none; }
     var has = !!(view.holo && view.holo(i));
     holobox.hidden = !has; stage.classList.toggle('has-holo', has);
     if (!has) { flip.classList.remove('holo-on'); holoOn = false; return; }
+    Array.prototype.forEach.call(stage.querySelectorAll('.holo.h2'), scatterStars);
     setHolo(view === viewAlbum ? !album.holoOff[CARDS[i].codigo] : true);
     title.textContent += ', versão holográfica disponível';
   }
