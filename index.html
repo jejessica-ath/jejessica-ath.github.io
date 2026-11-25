@@ -9,7 +9,7 @@
 body { margin: 0; font: 14px system-ui, sans-serif; }
 img { max-width: 100%; }
 </style>
-<!-- build-2026-11-25c: holo com estrelinhas de 4 pontas -->
+<!-- build-2026-11-25e: holo 5% e botão debug a 1% -->
 <title>Cartas de Meteoritos e Impactitos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -465,6 +465,13 @@ h1:focus { outline: none; }
 @keyframes holomove { from { background-position: 0 0, 0% 20%; } to { background-position: 0 0, 100% 80%; } }
 .thumb.is-holo.holo-on .holo, .flip.holo-on .holo { display: block; }
 .tag.holo { right: auto; left: -8px; color: #1a1300; background: linear-gradient(100deg, #ff7ab8, #ffd36a, #7dffb2, #6fdcff, #b69cff); }
+.dbg {
+  position: fixed; z-index: 6; left: max(8px, env(safe-area-inset-left, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
+  width: 44px; height: 44px; padding: 0; border: 0; cursor: pointer; background: #fff; opacity: .01;
+  clip-path: polygon(50% 0, 59% 41%, 100% 50%, 59% 59%, 50% 100%, 41% 59%, 0 50%, 41% 41%);
+  -webkit-tap-highlight-color: transparent; transition: opacity .3s;
+}
+.dbg:focus-visible, .dbg.ok { opacity: .9; }
 .holobox {
   margin: 0; border: 1px solid var(--line); border-radius: 14px; background: rgba(8, 11, 30, .86);
   padding: 8px 14px 10px; display: flex; flex-direction: column; gap: 2px; color: var(--ink); font-size: .9rem;
@@ -615,6 +622,7 @@ h1:focus { outline: none; }
         <button id="al-booster" class="btn primary" type="button">Abrir um booster?</button>
         <button id="al-coll" class="btn" type="button">Ver coleção</button>
       </div>
+      <button id="al-dbg" class="dbg" type="button" aria-label="Depuração: toque 4 vezes para liberar o próximo booster"></button>
       <details class="asave" id="al-save">
         <summary>Salvar ou levar o álbum para outro aparelho</summary>
         <p>O álbum fica guardado neste navegador. Para usá-lo em outro aparelho, copie o código abaixo e cole lá.</p>
@@ -1313,6 +1321,16 @@ h1:focus { outline: none; }
     alPaste.value = '';
     albumMsg('Álbum restaurado: ' + (ownedCount() - before) + ' carta(s) nova(s), total de ' + ownedCount() + ' de ' + N + '.');
   });
+  /* depuração: 4 toques seguidos zeram a espera do próximo booster */
+  var dbgN = 0, dbgT = 0, dbgBtn = $('#al-dbg');
+  dbgBtn.addEventListener('click', function () {
+    clearTimeout(dbgT); dbgN++;
+    if (dbgN < 4) { dbgT = setTimeout(function () { dbgN = 0; }, 2500); return; }
+    dbgN = 0;
+    album.next = 0; saveAlbum(); refreshWait();
+    dbgBtn.classList.add('ok'); setTimeout(function () { dbgBtn.classList.remove('ok'); }, 700);
+    albumMsg('Espera do próximo booster zerada.');
+  });
   var resetTimer = 0;
   function disarm() { clearTimeout(resetTimer); alReset.classList.remove('armed'); alReset.textContent = 'Apagar álbum'; }
   alReset.addEventListener('click', function () {
@@ -1517,7 +1535,7 @@ h1:focus { outline: none; }
     if (bState !== 'idle' || Date.now() < (album.next || 0)) return;
     var my = ++bRun;
     bState = 'pack';
-    pullList = draw5(); pullHolo = pullList.map(function () { return Math.random() < 0.1; }); buildPulled(pullList); viewPull = pullView();
+    pullList = draw5(); pullHolo = pullList.map(function () { return Math.random() < 0.05; }); buildPulled(pullList); viewPull = pullView();
     bIntro.hidden = true; bActions.hidden = true; packHint.hidden = true;
     packWrap.hidden = false; packWrap.classList.remove('floating'); packWrap.style.animationPlayState = '';
     pack.disabled = false;
