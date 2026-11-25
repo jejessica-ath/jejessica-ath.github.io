@@ -9,7 +9,7 @@
 body { margin: 0; font: 14px system-ui, sans-serif; }
 img { max-width: 100%; }
 </style>
-<!-- build-2026-11-24e: tela secreta do Booster Meteorítico -->
+<!-- build-2026-11-25b: holo tinge também as áreas pretas -->
 <title>Cartas de Meteoritos e Impactitos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -368,7 +368,127 @@ h1:focus { outline: none; }
 .pulled .thumb { box-shadow: 0 16px 36px rgba(0, 0, 0, .55), 0 0 34px 6px rgba(255, 255, 255, .3), 0 0 0 1px rgba(255, 255, 255, .16); }
 .bactions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 
+
+/* ---------- Álbum pessoal ---------- */
+.albumbar { margin-top: 22px; display: flex; justify-content: center; }
+.pill {
+  display: inline-block; min-width: 3.6ch; padding: 1px 9px; border-radius: 999px; text-align: center;
+  background: rgba(246, 198, 26, .16); color: var(--gold); font: 600 .8rem/1.6 var(--font-display); letter-spacing: .06em;
+}
+.btop { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; }
+.btop .bback { align-self: auto; }
+.btop .bback .pill { margin-left: 6px; }
+.amain { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 14px; padding-block: 4px 24px; }
+.atitle { margin: 6px 0 0; font: 500 1.7rem/1.2 var(--font-display); letter-spacing: .14em; text-transform: uppercase; text-align: center; color: var(--gold); outline: none; }
+.acount { margin: 0; font-family: var(--font-display); letter-spacing: .1em; color: var(--ink); }
+.acount b { font-weight: 600; color: var(--gold); font-size: 1.25em; }
+.bar { width: min(320px, 80vw); height: 8px; border-radius: 999px; background: rgba(255, 255, 255, .12); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--violet), var(--gold)); transition: width .6s ease; }
+.anote { margin: 0; min-height: 1.4em; max-width: 46ch; text-align: center; font-size: .92rem; color: var(--ink-dim); text-wrap: pretty; }
+.album-grid {
+  --cw: min(40vw, 170px);
+  list-style: none; margin: 8px 0 0; padding: 0; width: 100%;
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 1.6rem 1.2rem;
+}
+.album-grid li { width: var(--cw); position: relative; }
+@media (min-width: 780px) { .album-grid { --cw: clamp(130px, 13vw, 170px); max-width: 1100px; } }
+.album-grid .thumb { animation: none; rotate: 0deg; }
+.album-grid .card:hover .thumb, .album-grid .card:focus-visible .thumb { scale: 1.05; }
+.slot { display: block; padding: 10px 0 0; text-align: center; }
+.slot .thumb.lock {
+  display: grid; place-items: center; box-shadow: none;
+  border: 2px dashed rgba(255, 255, 255, .22); background: rgba(255, 255, 255, .035);
+  color: rgba(255, 255, 255, .3); font: 600 2.6rem/1 var(--font-display);
+}
+.slot .cap { opacity: .55; }
+.dupbadge {
+  position: absolute; z-index: 2; top: -8px; right: -6px; min-width: 2.2em; padding: 2px 8px; border-radius: 999px;
+  background: var(--gold); color: #1a1300; font: 700 .78rem/1.4 var(--font-display); text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .5); pointer-events: none;
+}
+.tag {
+  position: absolute; z-index: 2; top: -8px; right: -8px; padding: 2px 10px; border-radius: 999px;
+  font: 700 .72rem/1.5 var(--font-display); letter-spacing: .1em; text-transform: uppercase; pointer-events: none;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .55); animation: tagpop .45s cubic-bezier(.2, 1.4, .4, 1) both;
+}
+.tag.new { background: var(--gold); color: #1a1300; }
+.tag.dup { background: rgba(20, 24, 56, .92); color: var(--ink-dim); border: 1px solid var(--line); }
+.bwait { margin: 0; font: 600 1.05rem var(--font-display); letter-spacing: .1em; color: var(--gold); }
+.tag { white-space: nowrap; }
+.pick { margin-top: 8px; min-height: 44px; padding: 0 16px; font-size: .85rem; }
+.pick.done { background: var(--gold); color: #1a1300; border-color: transparent; opacity: 1; }
+.pulled li.passed .thumb { opacity: .4; filter: grayscale(.6); }
+.pulled li.passed::before { display: none; }
+.pulled li.passed .cap { opacity: .5; }
+@keyframes tagpop { from { opacity: 0; scale: .4; } to { opacity: 1; scale: 1; } }
+.bsum { margin: 0; text-align: center; font-size: .95rem; color: var(--ink); }
+.bsum b { color: var(--gold); }
+.asave { width: min(520px, 100%); margin-top: 8px; border: 1px solid var(--line); border-radius: 14px; background: rgba(8, 11, 30, .55); padding: 4px 16px; }
+.asave summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: var(--ink-dim); font-size: .92rem; }
+.asave summary:hover { color: var(--ink); }
+.asave summary:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; border-radius: 8px; }
+.asave p { margin: 6px 0 12px; font-size: .88rem; color: var(--ink-dim); }
+.asave label { display: block; margin: 12px 0 6px; font-size: .85rem; color: var(--ink); }
+.asave textarea {
+  width: 100%; box-sizing: border-box; resize: vertical; padding: 10px 12px; border-radius: 10px;
+  border: 1px solid var(--line); background: rgba(0, 0, 0, .35); color: var(--ink);
+  font: .78rem/1.4 ui-monospace, Menlo, Consolas, monospace; word-break: break-all;
+}
+.asave textarea:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.asave .row { margin-top: 10px; justify-content: flex-start; }
+.btn.danger { color: #ffb3b3; border-color: rgba(255, 107, 107, .45); }
+.btn.danger.armed { background: #b3202c; color: #fff; border-color: transparent; }
+.amsg { min-height: 1.3em; margin: 10px 0 12px; color: var(--gold); }
+
+
+/* ---------- Holográfico ---------- */
+.face { isolation: isolate; }
+.thumb.is-holo { position: relative; isolation: isolate; }
+.holo {
+  position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 3; display: none; overflow: hidden;
+  background:
+    radial-gradient(circle at var(--mx, 30%) var(--my, 22%), rgba(255, 255, 255, .45) 0, rgba(255, 255, 255, 0) 22%),
+    linear-gradient(115deg, #ff2d95 0%, #ff9d2d 10%, #f6ff3a 20%, #2dff8a 30%, #2dd7ff 40%, #7a5cff 50%, #ff2d95 60%, #ff9d2d 70%, #f6ff3a 80%, #2dff8a 90%, #2dd7ff 100%);
+  background-size: 100% 100%, 170% 170%;
+  background-position: 0 0, 0% 30%;
+  /* "screen" soma a cor sem estourar: também tinge as áreas pretas e não cria manchas nas bordas */
+  mix-blend-mode: screen; opacity: .42;
+  animation: holomove 6s ease-in-out infinite alternate;
+}
+.holo.h2 {
+  mix-blend-mode: screen; opacity: .6;
+  background:
+    radial-gradient(circle, #fff 0 1px, rgba(255, 255, 255, 0) 2.4px) 0 0 / 31px 37px,
+    radial-gradient(circle, #fff 0 1px, rgba(255, 255, 255, 0) 2px) 13px 17px / 23px 29px;
+  animation: holotwinkle 2.8s ease-in-out infinite alternate;
+}
+@keyframes holomove { from { background-position: 0 0, 0% 20%; } to { background-position: 0 0, 100% 80%; } }
+@keyframes holotwinkle { from { opacity: .22; } to { opacity: .65; } }
+.thumb.is-holo.holo-on .holo, .flip.holo-on .holo { display: block; }
+.tag.holo { right: auto; left: -8px; color: #1a1300; background: linear-gradient(100deg, #ff7ab8, #ffd36a, #7dffb2, #6fdcff, #b69cff); }
+.holobox {
+  margin: 0; border: 1px solid var(--line); border-radius: 14px; background: rgba(8, 11, 30, .86);
+  padding: 8px 14px 10px; display: flex; flex-direction: column; gap: 2px; color: var(--ink); font-size: .9rem;
+}
+.holobox legend { padding: 0 6px; font: 500 .72rem var(--font-display); letter-spacing: .18em; text-transform: uppercase; color: var(--gold); }
+.holobox label { display: flex; align-items: center; gap: 10px; min-height: 44px; cursor: pointer; }
+.holobox input { width: 20px; height: 20px; margin: 0; accent-color: var(--gold); }
+.holobox input:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+@media (min-width: 940px) {
+  .holobox { position: absolute; top: 50%; left: calc(50% + var(--fw) / 2 + 28px); translate: 0 -50%; width: 200px; }
+}
+@media (max-width: 939px) {
+  .holobox { flex-direction: row; gap: 18px; padding: 0 16px; }
+  .holobox legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); padding: 0; }
+  .stage.has-holo { --fw: min(88vw, 480px, calc((100vh - 290px) * .714286)); --tvh: calc(100vh - 290px); }
+}
+@supports (height: 100dvh) {
+  @media (max-width: 939px) { .stage.has-holo { --fw: min(88vw, 480px, calc((100dvh - 290px) * .714286)); --tvh: calc(100dvh - 290px); } }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .holo, .holo.h2 { animation: none; }
+  .tag, .bar i { animation: none; transition: none; }
   .pack-wrap.floating, .pack-wrap::before, .sheen, .pulled li::before { animation: none; }
   .secret, .pack { transition: none; }
 }
@@ -425,6 +545,9 @@ h1:focus { outline: none; }
     <p class="sub">Coleção de Meteoritos e Impactitos do Observatório Astronômico da UFSCar</p>
     <p class="about">Cardset e tabuleiro feitos como parte da cartilha educativa do Projeto de Treinamento em Meteorítica da UFSCar</p>
     <p class="lead">Toque em uma das <span id="total">22</span> cartas para vê-la de perto. Depois, gire para ler o verso.</p>
+    <div class="albumbar" id="albumbar" hidden>
+      <button id="open-album" class="btn" type="button">Meu álbum <span class="pill" id="pill-c" aria-hidden="true">0/22</span></button>
+    </div>
   </header>
   <main id="cartas" tabindex="-1">
     <ul class="deck" id="deck" role="list"></ul>
@@ -434,14 +557,18 @@ h1:focus { outline: none; }
 
   <section id="screen-booster" class="bscreen" aria-labelledby="bs-title" hidden>
     <h2 id="bs-title" class="sr" tabindex="-1">Booster Meteorítico</h2>
-    <button id="bs-back" class="bback" type="button">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
-      <span>Coleção</span>
-    </button>
+    <div class="btop" id="btop">
+      <button id="bs-back" class="bback" type="button">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+        <span>Coleção</span>
+      </button>
+      <button id="bs-album" class="bback" type="button"><span>Meu álbum</span><span class="pill" id="pill-b" aria-hidden="true">0/22</span></button>
+    </div>
     <div class="bmain">
       <div class="bstage" id="bstage">
         <div class="bintro" id="bintro">
           <button id="bs-open" class="btn primary big" type="button">Abrir booster?</button>
+          <p class="bwait" id="bs-wait" hidden></p>
           <p class="bnote">Cada booster traz 5 cartas sorteadas entre as <span id="total2">22</span> da coleção.</p>
         </div>
         <div class="pack-wrap" id="pack-wrap" hidden>
@@ -462,10 +589,46 @@ h1:focus { outline: none; }
         <ul class="deck pulled" id="pulled" role="list" hidden></ul>
       </div>
       <p class="tip" id="pack-hint" hidden>Toque no booster para abrir.</p>
+      <p class="bsum" id="bsum" hidden></p>
       <div class="bactions" id="bactions" hidden>
         <button id="bs-again" class="btn primary" type="button">Abrir um booster?</button>
+        <button id="bs-album2" class="btn" type="button">Meu álbum</button>
         <button id="bs-coll" class="btn" type="button">Ver coleção</button>
       </div>
+    </div>
+  </section>
+
+  <section id="screen-album" class="bscreen ascreen" aria-labelledby="al-title" hidden>
+    <div class="btop">
+      <button id="al-back" class="bback" type="button">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+        <span>Coleção</span>
+      </button>
+    </div>
+    <div class="amain">
+      <h2 id="al-title" class="atitle" tabindex="-1">Meu álbum</h2>
+      <p class="acount"><b id="al-count">0</b> de <span id="al-total">22</span> cartas</p>
+      <div class="bar" id="al-progress" role="progressbar" aria-labelledby="al-title" aria-valuemin="0" aria-valuemax="22" aria-valuenow="0" aria-valuetext="0 de 22 cartas"><i id="al-bar"></i></div>
+      <p class="anote" id="al-note"></p>
+      <ul class="album-grid" id="album-grid" role="list"></ul>
+      <div class="bactions">
+        <button id="al-booster" class="btn primary" type="button">Abrir um booster?</button>
+        <button id="al-coll" class="btn" type="button">Ver coleção</button>
+      </div>
+      <details class="asave" id="al-save">
+        <summary>Salvar ou levar o álbum para outro aparelho</summary>
+        <p>O álbum fica guardado neste navegador. Para usá-lo em outro aparelho, copie o código abaixo e cole lá.</p>
+        <label for="al-code">Código do seu álbum</label>
+        <textarea id="al-code" readonly rows="3"></textarea>
+        <div class="row"><button id="al-copy" class="btn" type="button">Copiar código</button></div>
+        <label for="al-paste">Colar um código</label>
+        <textarea id="al-paste" rows="3" placeholder="MET1-…" spellcheck="false" autocomplete="off"></textarea>
+        <div class="row">
+          <button id="al-restore" class="btn" type="button">Restaurar álbum</button>
+          <button id="al-reset" class="btn danger" type="button">Apagar álbum</button>
+        </div>
+        <p class="amsg" id="al-msg" role="status"></p>
+      </details>
     </div>
   </section>
 
@@ -482,10 +645,16 @@ h1:focus { outline: none; }
 
   <div class="scene" id="scene">
     <div class="flip" id="flip">
-      <div class="face front" id="face-front"><img id="img-front" alt="" width="640" height="896" draggable="false"></div>
-      <div class="face back" id="face-back" aria-hidden="true"><img id="img-back" alt="" width="640" height="896" draggable="false"></div>
+      <div class="face front" id="face-front"><img id="img-front" alt="" width="640" height="896" draggable="false"><i class="holo" aria-hidden="true"></i><i class="holo h2" aria-hidden="true"></i></div>
+      <div class="face back" id="face-back" aria-hidden="true"><img id="img-back" alt="" width="640" height="896" draggable="false"><i class="holo" aria-hidden="true"></i><i class="holo h2" aria-hidden="true"></i></div>
     </div>
   </div>
+
+  <fieldset class="holobox" id="holobox" hidden>
+    <legend>Versão da carta</legend>
+    <label><input type="radio" name="holover" value="holo" checked> Holográfica</label>
+    <label><input type="radio" name="holover" value="normal"> Normal</label>
+  </fieldset>
 
   <div class="textview" id="textview" role="region" aria-label="Texto da carta" tabindex="0" hidden></div>
 
@@ -667,10 +836,13 @@ h1:focus { outline: none; }
   var current = -1, angle = 0, busy = false, textMode = false, drag = null, flipAnim = null;
 
   /* Uma "vista" diz quais cartas estão na tela e onde: a coleção inteira ou as 5 do booster. */
-  function makeView(ul, list) {
+  function mkHolo(n) { var e = document.createElement('i'); e.className = 'holo' + (n === 2 ? ' h2' : ''); e.setAttribute('aria-hidden', 'true'); return e; }
+  function addHolo(th, on) { th.classList.add('is-holo'); if (on) th.classList.add('holo-on'); th.appendChild(mkHolo(1)); th.appendChild(mkHolo(2)); }
+
+  function makeView(ul, list, holoFn) {
     return {
-      list: list,
-      li: function (i) { return ul.children[list.indexOf(i)]; },
+      list: list, holo: holoFn || null,
+      li: function (i) { return ul.querySelector('li[data-slot="' + i + '"]') || ul.children[list.indexOf(i)]; },
       thumb: function (i) { return this.li(i).querySelector('.thumb'); },
       btn: function (i) { return this.li(i).querySelector('.card'); }
     };
@@ -740,6 +912,38 @@ h1:focus { outline: none; }
     });
   }
 
+  var holobox = $('#holobox'), holoRadios = holobox.querySelectorAll('input'), holoOn = false;
+  function setHolo(on) {
+    holoOn = on; flip.classList.toggle('holo-on', on);
+    holoRadios[0].checked = on; holoRadios[1].checked = !on;
+  }
+  function syncHolo(i) {
+    var has = !!(view.holo && view.holo(i));
+    holobox.hidden = !has; stage.classList.toggle('has-holo', has);
+    if (!has) { flip.classList.remove('holo-on'); holoOn = false; return; }
+    setHolo(view === viewAlbum ? !album.holoOff[CARDS[i].codigo] : true);
+    title.textContent += ', versão holográfica disponível';
+  }
+  Array.prototype.forEach.call(holoRadios, function (rd) {
+    rd.addEventListener('change', function () {
+      var on = holoRadios[0].checked;
+      setHolo(on);
+      if (view === viewAlbum && current >= 0) {
+        var code = CARDS[current].codigo;
+        if (on) delete album.holoOff[code]; else album.holoOff[code] = true;
+        saveAlbum();
+        var th = view.thumb(current); if (th) th.classList.toggle('holo-on', on);
+      }
+      say(on ? 'Mostrando a versão holográfica.' : 'Mostrando a versão normal.');
+    });
+  });
+  scene.addEventListener('pointermove', function (e) {
+    if (!holoOn) return;
+    var rc = scene.getBoundingClientRect();
+    scene.style.setProperty('--mx', ((e.clientX - rc.left) / rc.width * 100).toFixed(0) + '%');
+    scene.style.setProperty('--my', ((e.clientY - rc.top) / rc.height * 100).toFixed(0) + '%');
+  });
+
   function fill(i) {
     var c = CARDS[i];
     imgF.src = miniUrl(c); imgF.alt = altFront(c);
@@ -749,6 +953,7 @@ h1:focus { outline: none; }
     title.textContent = c.nome + ', carta ' + c.codigo;
     counter.textContent = posText(i);
     buildText(c);
+    syncHolo(i);
   }
 
   function decodeBoth() {
@@ -900,10 +1105,11 @@ h1:focus { outline: none; }
   document.addEventListener('keydown', function (e) {
     if (current < 0 || stage.hidden) return;
     if (e.key === 'Escape') { e.preventDefault(); closeCard(); return; }
+    if (e.target && e.target.tagName === 'INPUT' && e.key.indexOf('Arrow') === 0) return;
     if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); return; }
     if (e.key === 'ArrowRight') { e.preventDefault(); go(1); return; }
     if (e.key === 'Tab') {
-      var f = Array.prototype.filter.call(stage.querySelectorAll('button:not([disabled]), [tabindex="0"]'),
+      var f = Array.prototype.filter.call(stage.querySelectorAll('button:not([disabled]), input:not([disabled]), [tabindex="0"]'),
         function (el) { return !el.closest('[hidden]'); });
       if (!f.length) return;
       var first = f[0], last = f[f.length - 1];
@@ -944,10 +1150,178 @@ h1:focus { outline: none; }
   scene.addEventListener('pointerup', function (e) { endDrag(e, false); });
   scene.addEventListener('pointercancel', function (e) { endDrag(e, true); });
 
-  /* ---------- Telas: coleção e booster ---------- */
+  /* ---------- Álbum pessoal (guardado no navegador) ---------- */
+  var STORE_KEY = 'cartas-meteoritos-album-v1';
+  var WAIT = 30 * 60 * 1000;
+  var album = { owned: {}, packs: 0, next: 0, pending: null, pendingHolo: null, holo: {}, holoOff: {} }, storageOk = true;
+  var KEYS = {}; CARDS.forEach(function (c) { KEYS[c.codigo] = 1; });
+
+  function cleanAlbum(o) {
+    var r = { owned: {}, packs: 0, next: 0, pending: null, pendingHolo: null, holo: {}, holoOff: {} };
+    if (o && typeof o === 'object') {
+      var ow = (o.owned && typeof o.owned === 'object') ? o.owned : {};
+      Object.keys(ow).forEach(function (k) {
+        var n = Math.floor(Number(ow[k]));
+        if (KEYS[k] === 1 && n > 0) r.owned[k] = Math.min(n, 999);
+      });
+      var p = Math.floor(Number(o.packs));
+      if (p > 0) r.packs = Math.min(p, 99999);
+      var nx = Number(o.next);
+      if (isFinite(nx) && nx > 0) r.next = Math.min(nx, Date.now() + WAIT);
+      if (Array.isArray(o.pending) && o.pending.length === 5 && o.pending.every(function (k) { return KEYS[k] === 1; }) && o.pending.filter(function (k, j, a) { return a.indexOf(k) === j; }).length === 5) r.pending = o.pending.slice();
+      if (r.pending) {
+        var ph = Array.isArray(o.pendingHolo) ? o.pendingHolo : [];
+        r.pendingHolo = [0, 1, 2, 3, 4].map(function (j) { return ph[j] === true; });
+      }
+      ['holo', 'holoOff'].forEach(function (f) {
+        var m = o[f];
+        if (m && typeof m === 'object') Object.keys(m).forEach(function (k) { if (KEYS[k] === 1 && m[k]) r[f][k] = true; });
+      });
+    }
+    return r;
+  }
+  function loadAlbum() {
+    try { var raw = localStorage.getItem(STORE_KEY); if (raw) album = cleanAlbum(JSON.parse(raw)); }
+    catch (_) { storageOk = false; }
+  }
+  function saveAlbum() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(album)); return true; }
+    catch (_) { storageOk = false; return false; }
+  }
+  function ownedCount() { return Object.keys(album.owned).length; }
+  function albumCode() {
+    try { return 'MET1-' + btoa(JSON.stringify({ o: album.owned, p: album.packs, h: Object.keys(album.holo) })); } catch (_) { return ''; }
+  }
+  function parseCode(txt) {
+    try {
+      txt = String(txt || '').replace(/\s+/g, '');
+      if (txt.indexOf('MET1-') !== 0) return null;
+      var o = JSON.parse(atob(txt.slice(5)));
+      var hm = {}; ((o && Array.isArray(o.h)) ? o.h : []).forEach(function (k) { hm[k] = true; });
+      return cleanAlbum({ owned: o && o.o, packs: o && o.p, holo: hm });
+    } catch (_) { return null; }
+  }
+
+  var screenA = $('#screen-album'), albumGrid = $('#album-grid'), viewAlbum = null;
+  var albumBar = $('#albumbar'), pillC = $('#pill-c'), pillB = $('#pill-b'), openAlbumBtn = $('#open-album'), bsAlbum = $('#bs-album');
+  var alCount = $('#al-count'), alBar = $('#al-bar'), alProg = $('#al-progress'), alNote = $('#al-note');
+  var alCode = $('#al-code'), alPaste = $('#al-paste'), alMsg = $('#al-msg'), alReset = $('#al-reset');
+  $('#al-total').textContent = String(N);
+  alProg.setAttribute('aria-valuemax', String(N));
+
+  function refreshCounts() {
+    var n = ownedCount(), t = n + '/' + N;
+    pillC.textContent = t; pillB.textContent = t;
+    openAlbumBtn.setAttribute('aria-label', 'Meu álbum, ' + n + ' de ' + N + ' cartas');
+    bsAlbum.setAttribute('aria-label', 'Meu álbum, ' + n + ' de ' + N + ' cartas');
+    /* o botão só aparece depois do primeiro booster, para a tela secreta continuar secreta */
+    albumBar.hidden = !(album.packs > 0 || n > 0 || album.pending || (album.next || 0) > Date.now());
+  }
+
+  function renderAlbum() {
+    var n = ownedCount(), owned = [];
+    albumGrid.textContent = '';
+    CARDS.forEach(function (c, i) {
+      var li = document.createElement('li'); li.dataset.slot = String(i);
+      var have = album.owned[c.codigo] || 0;
+      if (have > 0) {
+        owned.push(i);
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'card'; b.dataset.i = String(i);
+        b.setAttribute('aria-haspopup', 'dialog');
+        b.setAttribute('aria-label', c.nome + ', carta ' + c.codigo + ', ' + c.classe + (album.holo[c.codigo] ? ', versão holográfica disponível' : '') + (have > 1 ? ', você tem ' + have + ' cópias' : ''));
+        var th = document.createElement('span'); th.className = 'thumb';
+        var im = new Image(); im.src = miniUrl(c); im.alt = ''; im.width = 420; im.height = 588; im.draggable = false;
+        th.appendChild(im);
+        if (album.holo[c.codigo]) addHolo(th, !album.holoOff[c.codigo]);
+        var cap = document.createElement('span'); cap.className = 'cap';
+        var code = document.createElement('b'); code.className = c.tipo; code.textContent = c.codigo;
+        cap.appendChild(code); cap.appendChild(document.createTextNode(c.curto || c.nome));
+        b.appendChild(th); b.appendChild(cap); li.appendChild(b);
+        if (have > 1) {
+          var d = document.createElement('span'); d.className = 'dupbadge'; d.setAttribute('aria-hidden', 'true'); d.textContent = '×' + have;
+          li.appendChild(d);
+        }
+      } else {
+        var sl = document.createElement('div'); sl.className = 'slot'; sl.setAttribute('role', 'img');
+        sl.setAttribute('aria-label', 'Vaga da carta ' + c.codigo + ', ainda não obtida');
+        var lk = document.createElement('span'); lk.className = 'thumb lock'; lk.setAttribute('aria-hidden', 'true'); lk.textContent = '?';
+        var cp = document.createElement('span'); cp.className = 'cap'; cp.setAttribute('aria-hidden', 'true');
+        var cd = document.createElement('b'); cd.className = c.tipo; cd.textContent = c.codigo;
+        cp.appendChild(cd);
+        sl.appendChild(lk); sl.appendChild(cp); li.appendChild(sl);
+      }
+      albumGrid.appendChild(li);
+    });
+    viewAlbum = makeView(albumGrid, owned, function (i) { return !!album.holo[CARDS[i].codigo]; });
+    alCount.textContent = String(n);
+    alBar.style.width = (n / N * 100).toFixed(1) + '%';
+    alProg.setAttribute('aria-valuenow', String(n));
+    alProg.setAttribute('aria-valuetext', n + ' de ' + N + ' cartas');
+    var note = n === 0 ? 'Seu álbum está vazio. Abra um booster para começar a colecionar.'
+      : n === N ? 'Álbum completo! Você reuniu todas as cartas da coleção.'
+      : 'Faltam ' + (N - n) + ' para completar. Toque numa carta para vê-la de perto.';
+    if (!storageOk) note += ' Este navegador não deixa salvar dados: o álbum vale só enquanto a página estiver aberta. Use o código abaixo para guardá-lo.';
+    alNote.textContent = note;
+    alCode.value = albumCode();
+  }
+
+  /* guarda no álbum a carta escolhida do booster; devolve true se for nova */
+  function commitOne(i, holo) {
+    var k = CARDS[i].codigo, had = album.owned[k] || 0;
+    if (holo) { album.holo[k] = true; delete album.holoOff[k]; }
+    album.pendingHolo = null;
+    album.owned[k] = Math.min(had + 1, 999);
+    album.packs++; album.pending = null;
+    saveAlbum(); refreshCounts();
+    return had === 0;
+  }
+
+  albumGrid.addEventListener('click', function (e) {
+    var b = e.target.closest('.card');
+    if (b && viewAlbum) openCard(Number(b.dataset.i), viewAlbum);
+  });
+
+  function albumMsg(t) { alMsg.textContent = ''; setTimeout(function () { alMsg.textContent = t; }, 40); }
+  $('#al-copy').addEventListener('click', function () {
+    var code = albumCode(), ok = function () { albumMsg('Código copiado.'); };
+    var fallback = function () { alCode.focus(); alCode.select(); albumMsg('Selecionei o código. Use Ctrl+C (ou "Copiar" no celular).'); };
+    try { navigator.clipboard.writeText(code).then(ok, fallback); } catch (_) { fallback(); }
+  });
+  $('#al-restore').addEventListener('click', function () {
+    var r = parseCode(alPaste.value);
+    if (!r) { albumMsg('Esse código não é válido. Confira se copiou tudo, começando por MET1-.'); return; }
+    var before = ownedCount();
+    Object.keys(r.owned).forEach(function (k) { album.owned[k] = Math.max(album.owned[k] || 0, r.owned[k]); });
+    album.packs = Math.max(album.packs, r.packs);
+    Object.keys(r.holo).forEach(function (k) { album.holo[k] = true; });
+    saveAlbum(); refreshCounts(); renderAlbum();
+    alPaste.value = '';
+    albumMsg('Álbum restaurado: ' + (ownedCount() - before) + ' carta(s) nova(s), total de ' + ownedCount() + ' de ' + N + '.');
+  });
+  var resetTimer = 0;
+  function disarm() { clearTimeout(resetTimer); alReset.classList.remove('armed'); alReset.textContent = 'Apagar álbum'; }
+  alReset.addEventListener('click', function () {
+    if (!alReset.classList.contains('armed')) {
+      alReset.classList.add('armed'); alReset.textContent = 'Confirmar: apagar tudo?';
+      albumMsg('Toque de novo para apagar o álbum. Isso não pode ser desfeito.');
+      resetTimer = setTimeout(function () { disarm(); albumMsg(''); }, 5000);
+      return;
+    }
+    disarm();
+    album = { owned: {}, packs: 0, next: album.next, pending: album.pending, pendingHolo: album.pendingHolo, holo: {}, holoOff: {} };
+    saveAlbum(); refreshCounts(); renderAlbum();
+    albumMsg('Álbum apagado.');
+  });
+
+  loadAlbum(); refreshCounts();
+
+  /* ---------- Telas: coleção, booster e álbum ---------- */
   var screenC = $('#screen-collection'), screenB = $('#screen-booster'), secret = $('#secret');
   var skipLink = document.querySelector('.skip');
-  var shownBooster = false;
+  var SCREENS = { colecao: screenC, booster: screenB, album: screenA };
+  var HEADS = { colecao: '#page-title', booster: '#bs-title', album: '#al-title' };
+  var curScreen = 'colecao';
 
   function forceClose() {
     if (current < 0) return;
@@ -960,27 +1334,83 @@ h1:focus { outline: none; }
     current = -1; busy = false;
   }
 
-  function show(on, focus) {
-    if (on === shownBooster) return;
-    shownBooster = on;
+  function nameFromHash() {
+    var h = location.hash.replace('#', '');
+    return SCREENS[h] ? h : 'colecao';
+  }
+  function showScreen(name, focus) {
+    if (!SCREENS[name]) name = 'colecao';
+    if (name === curScreen) return;
+    curScreen = name;
     forceClose();
-    screenC.hidden = on; screenB.hidden = !on; secret.hidden = on; skipLink.hidden = on;
+    Object.keys(SCREENS).forEach(function (k) { SCREENS[k].hidden = (k !== name); });
+    secret.hidden = (name !== 'colecao'); skipLink.hidden = (name !== 'colecao');
     window.scrollTo(0, 0);
     resetBooster();
-    if (focus) (on ? $('#bs-title') : $('#page-title')).focus({ preventScroll: true });
+    disarm();
+    if (name === 'album') renderAlbum();
+    if (name === 'booster' && album.pending) restorePending();
+    refreshCounts(); refreshWait();
+    if (focus) $(HEADS[name]).focus({ preventScroll: true });
   }
   function goTo(name) {
     try { location.hash = name; } catch (_) {}
-    show(name === 'booster', true);
+    showScreen(name, true);
   }
-  window.addEventListener('hashchange', function () { show(location.hash === '#booster', true); });
+  window.addEventListener('hashchange', function () { showScreen(nameFromHash(), true); });
 
   /* ---------- Booster ---------- */
-  var bIntro = $('#bintro'), bsOpen = $('#bs-open'), bsBack = $('#bs-back'), bsAgain = $('#bs-again'), bsColl = $('#bs-coll');
+  var btop = $('#btop'), bsum = $('#bsum'), bIntro = $('#bintro'), bsOpen = $('#bs-open'), bsBack = $('#bs-back'), bsAgain = $('#bs-again'), bsColl = $('#bs-coll');
   var packWrap = $('#pack-wrap'), pack = $('#pack'), pkTop = $('#pk-top'), pkBody = $('#pk-body'), pkBeam = $('#pk-beam');
   var pulled = $('#pulled'), bActions = $('#bactions'), packHint = $('#pack-hint'), liveB = $('#live-b');
   var bState = 'idle';      /* idle | pack | opening | opened */
-  var bRun = 0, bAnims = [], pullList = [], viewPull = null;
+  var bRun = 0, bAnims = [], pullList = [], pullHolo = [], viewPull = null, chosen = false;
+  function pullView() { return makeView(pulled, pullList, function (i) { return !!pullHolo[pullList.indexOf(i)]; }); }
+  var bsWait = $('#bs-wait'), alBooster = $('#al-booster'), lastLeft = 0;
+
+  function fmtW(ms) { var t = Math.ceil(ms / 1000), m = Math.floor(t / 60), q = t % 60; return (m < 10 ? '0' : '') + m + ':' + (q < 10 ? '0' : '') + q; }
+  function refreshWait() {
+    var left = Math.max(0, (album.next || 0) - Date.now()), txt = left > 0 ? 'Próximo booster em ' + fmtW(left) : '';
+    if (bsWait.textContent !== txt) bsWait.textContent = txt;
+    bsWait.hidden = left <= 0; bsOpen.disabled = left > 0;
+    if (bState === 'opened') {
+      bsAgain.disabled = !chosen || left > 0;
+      var t2 = left > 0 ? txt : 'Abrir um booster?'; if (bsAgain.textContent !== t2) bsAgain.textContent = t2;
+    }
+    var pend = !!album.pending, t3 = pend ? 'Escolher carta do booster aberto' : (left > 0 ? txt : 'Abrir um booster?');
+    alBooster.disabled = left > 0 && !pend;
+    if (alBooster.textContent !== t3) alBooster.textContent = t3;
+    if (lastLeft > 0 && left === 0 && curScreen !== 'colecao') sayB('Seu próximo booster já está disponível.');
+    lastLeft = left;
+  }
+
+  /* depois de aberto: marca cada carta como nova/repetida (com a quantidade que já tem) e oferece "Escolher" */
+  function presentPulled(restored) {
+    chosen = false; bsAgain.disabled = true;
+    Array.prototype.forEach.call(pulled.children, function (li, k) {
+      var cb = li.querySelector('.card'), ci = Number(cb.dataset.i), c = CARDS[ci], had = album.owned[c.codigo] || 0;
+      var tg = document.createElement('span'); tg.className = 'tag ' + (had ? 'dup' : 'new'); tg.setAttribute('aria-hidden', 'true');
+      tg.textContent = had ? 'Repetida · ×' + had : 'Nova!'; li.appendChild(tg);
+      cb.setAttribute('aria-label', cb.getAttribute('aria-label') + (had ? ', repetida, você já tem ' + had + (had === 1 ? ' cópia' : ' cópias') + ' no álbum' : ', nova no álbum'));
+      if (pullHolo[k]) { var th2 = document.createElement('span'); th2.className = 'tag holo'; th2.setAttribute('aria-hidden', 'true'); th2.textContent = '✦ Holo'; li.appendChild(th2); }
+      var pk = document.createElement('button'); pk.type = 'button'; pk.className = 'btn pick'; pk.textContent = 'Escolher'; pk.dataset.i = String(ci);
+      pk.setAttribute('aria-label', 'Escolher ' + c.nome + ', carta ' + c.codigo + ', para levar ao álbum');
+      li.appendChild(pk);
+    });
+    bsum.textContent = (restored ? 'Você tem um booster aberto esperando a sua escolha. ' : '') + 'Escolha uma das cartas para levar ao seu álbum. “×2” indica quantas você já tem.';
+    bsum.hidden = false; bActions.hidden = false;
+  }
+
+  /* booster aberto e não escolhido: volta exatamente como estava */
+  function restorePending() {
+    var idx = album.pending.map(function (k) { for (var i = 0; i < N; i++) if (CARDS[i].codigo === k) return i; return -1; });
+    if (idx.some(function (i) { return i < 0; })) { album.pending = null; saveAlbum(); return; }
+    pullList = idx; pullHolo = album.pendingHolo ? album.pendingHolo.slice() : idx.map(function () { return false; }); buildPulled(pullList); viewPull = pullView();
+    bIntro.hidden = true; packWrap.hidden = true; packHint.hidden = true;
+    pulled.hidden = false; pulled.inert = false;
+    bState = 'opened'; btop.hidden = true;
+    presentPulled(true);
+  }
   document.getElementById('total2').textContent = String(N);
 
   var sayB = function (msg) { liveB.textContent = ''; setTimeout(function () { liveB.textContent = msg; }, 60); };
@@ -1025,7 +1455,7 @@ h1:focus { outline: none; }
 
   function buildPulled(list) {
     pulled.textContent = '';
-    list.forEach(function (i) {
+    list.forEach(function (i, k) {
       var c = CARDS[i];
       var li = document.createElement('li');
       li.style.setProperty('--r', (Math.random() * 10 - 5).toFixed(1) + 'deg');
@@ -1035,10 +1465,11 @@ h1:focus { outline: none; }
       var b = document.createElement('button');
       b.type = 'button'; b.className = 'card'; b.dataset.i = String(i);
       b.setAttribute('aria-haspopup', 'dialog');
-      b.setAttribute('aria-label', c.nome + ', carta ' + c.codigo + ', ' + c.classe);
+      b.setAttribute('aria-label', c.nome + ', carta ' + c.codigo + ', ' + c.classe + (pullHolo[k] ? ', versão holográfica' : ''));
       var th = document.createElement('span'); th.className = 'thumb';
       var im = new Image(); im.src = miniUrl(c); im.alt = ''; im.width = 420; im.height = 588; im.draggable = false;
       th.appendChild(im);
+      if (pullHolo[k]) addHolo(th, true);
       var cap = document.createElement('span'); cap.className = 'cap';
       var code = document.createElement('b'); code.className = c.tipo; code.textContent = c.codigo;
       cap.appendChild(code); cap.appendChild(document.createTextNode(c.curto || c.nome));
@@ -1056,22 +1487,23 @@ h1:focus { outline: none; }
     bAnims.forEach(function (a) { try { a.cancel(); } catch (_) {} });
     bAnims = [];
     bState = 'idle';
-    pullList = []; viewPull = null;
+    pullList = []; pullHolo = []; viewPull = null;
     pulled.hidden = true; pulled.inert = false; pulled.textContent = '';
     packWrap.hidden = true; packWrap.classList.remove('floating'); packWrap.style.animationPlayState = '';
     pkTop.classList.remove('torn'); pkBody.classList.remove('torn');
     pkTop.style.opacity = ''; pack.style.opacity = '';
     pack.disabled = false;
     bActions.hidden = true; packHint.hidden = true;
-    bIntro.hidden = false; bsBack.hidden = false;
+    chosen = false; bsAgain.disabled = false; bsAgain.textContent = 'Abrir um booster?';
+    bIntro.hidden = false; btop.hidden = false; bsum.hidden = true; bsum.textContent = '';
   }
 
   /* 1) "Abrir booster?": sorteia as 5 cartas e o pacote aparece flutuando */
   async function startPack() {
-    if (bState !== 'idle') return;
+    if (bState !== 'idle' || Date.now() < (album.next || 0)) return;
     var my = ++bRun;
     bState = 'pack';
-    pullList = draw5(); buildPulled(pullList); viewPull = makeView(pulled, pullList);
+    pullList = draw5(); pullHolo = pullList.map(function () { return Math.random() < 0.1; }); buildPulled(pullList); viewPull = pullView();
     bIntro.hidden = true; bActions.hidden = true; packHint.hidden = true;
     packWrap.hidden = false; packWrap.classList.remove('floating'); packWrap.style.animationPlayState = '';
     pack.disabled = false;
@@ -1094,6 +1526,8 @@ h1:focus { outline: none; }
     if (bState !== 'pack') return;
     var my = bRun, rm = reduce();
     bState = 'opening';
+    album.next = Date.now() + WAIT; album.pending = pullList.map(function (i) { return CARDS[i].codigo; }); album.pendingHolo = pullHolo.slice();
+    saveAlbum(); refreshWait();
     pack.disabled = true; packHint.hidden = true;
     packWrap.style.animationPlayState = 'paused';
     if (!rm) {
@@ -1149,17 +1583,37 @@ h1:focus { outline: none; }
     packWrap.hidden = true;
     pulled.inert = false;
     bState = 'opened';
-    bsBack.hidden = true;
-    bActions.hidden = false;
+    btop.hidden = true;
+    presentPulled(false);
     if (!rm) track(bActions.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 400, easing: 'ease-out' }));
-    sayB('Booster aberto. Cartas: ' + pullList.map(function (i) { return CARDS[i].nome + ', ' + CARDS[i].codigo; }).join('; ') + '.');
-    var first = pulled.querySelector('.card');
+    sayB('Booster aberto. Cartas: ' + pullList.map(function (i) { return CARDS[i].nome + ', ' + CARDS[i].codigo; }).join('; ') + '. Escolha uma para levar ao álbum.');
+    var first = pulled.querySelector('.pick');
     if (first) first.focus({ preventScroll: true });
+  }
+
+  function choose(i) {
+    if (bState !== 'opened' || chosen) return;
+    chosen = true;
+    var hol = !!pullHolo[pullList.indexOf(i)], isNew = commitOne(i, hol), c = CARDS[i], n = album.owned[c.codigo];
+    Array.prototype.forEach.call(pulled.children, function (li) {
+      var cb = li.querySelector('.card'), pk = li.querySelector('.pick');
+      if (Number(cb.dataset.i) === i) {
+        pk.textContent = 'No álbum'; pk.disabled = true; pk.classList.add('done');
+      } else { li.classList.add('passed'); pk.hidden = true; }
+    });
+    var msg = isNew ? c.nome + ' entrou no álbum.' : c.nome + ' já estava no álbum (agora você tem ' + n + ').';
+    if (hol) msg += ' A versão holográfica foi adicionada.';
+    bsum.innerHTML = ''; var bb = document.createElement('b'); bb.textContent = c.nome; bsum.appendChild(bb);
+    bsum.appendChild(document.createTextNode(isNew ? ' entrou no álbum' : ' já estava no álbum (×' + n + ')'));
+    bsum.appendChild(document.createTextNode((hol ? ' · versão holográfica ✦' : '') + ' · álbum: ' + ownedCount() + '/' + N));
+    refreshWait();
+    sayB(msg + ' Álbum: ' + ownedCount() + ' de ' + N + '.');
+    bsAgain.focus({ preventScroll: true });
   }
 
   /* 3) "Abrir um booster?": repete tudo com um pacote novo */
   async function again() {
-    if (bState !== 'opened') return;
+    if (bState !== 'opened' || !chosen) return;
     var my = bRun;
     bActions.hidden = true;
     window.scrollTo({ top: 0, behavior: reduce() ? 'auto' : 'smooth' });
@@ -1177,11 +1631,21 @@ h1:focus { outline: none; }
   bsColl.addEventListener('click', function () { goTo('colecao'); });
   bsBack.addEventListener('click', function () { goTo('colecao'); });
   secret.addEventListener('click', function () { goTo('booster'); });
+  openAlbumBtn.addEventListener('click', function () { goTo('album'); });
+  bsAlbum.addEventListener('click', function () { goTo('album'); });
+  $('#bs-album2').addEventListener('click', function () { goTo('album'); });
+  $('#al-back').addEventListener('click', function () { goTo('colecao'); });
+  $('#al-coll').addEventListener('click', function () { goTo('colecao'); });
+  $('#al-booster').addEventListener('click', function () { goTo('booster'); });
   pulled.addEventListener('click', function (e) {
+    var pk = e.target.closest('.pick');
+    if (pk) { choose(Number(pk.dataset.i)); return; }
     var b = e.target.closest('.card');
     if (b && viewPull) openCard(Number(b.dataset.i), viewPull);
   });
-  if (location.hash === '#booster') show(true, false);
+  setInterval(refreshWait, 1000);
+  if (nameFromHash() !== 'colecao') showScreen(nameFromHash(), false);
+  refreshWait(); refreshCounts();
 
   /* ---------- Céu estrelado ---------- */
   var sky = $('#sky'), ctx = sky.getContext('2d');
@@ -1246,6 +1710,7 @@ h1:focus { outline: none; }
   }
   function frame(t) {
     if (!animate) { running = false; return; }
+    if (!stage.hidden) { requestAnimationFrame(frame); return; }
     px += (tx - px) * 0.06; py += (ty - py) * 0.06;
     draw(t);
     requestAnimationFrame(frame);
