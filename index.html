@@ -9,7 +9,7 @@
 body { margin: 0; font: 14px system-ui, sans-serif; }
 img { max-width: 100%; }
 </style>
-<!-- build-2026-11-26a: verso da NWA 869 atualizado -->
+<!-- build-2026-11-28a: loja, raridades e sorteio ponderado -->
 <title>Cartas de Meteoritos e Impactitos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -441,6 +441,26 @@ h1:focus { outline: none; }
 .amsg { min-height: 1.3em; margin: 10px 0 12px; color: var(--gold); }
 
 
+
+/* ---------- Loja ---------- */
+.albumbar { gap: 10px; flex-wrap: wrap; }
+.lsec { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 14px; }
+.lsec h3 { margin: 0; font: 500 1.05rem var(--font-display); letter-spacing: .16em; text-transform: uppercase; color: var(--gold); text-align: center; }
+.lnote { margin: 0; max-width: 52ch; text-align: center; font-size: .9rem; color: var(--ink-dim); text-wrap: pretty; }
+.tier { display: inline-block; padding: 1px 9px; border-radius: 999px; border: 1px solid currentColor; font: 600 .66rem/1.6 var(--font-display); letter-spacing: .12em; text-transform: uppercase; }
+.t-comum { color: #a9b3d6; } .t-incomum { color: #6fe0a6; } .t-rara { color: #6db4ff; } .t-epica { color: #c58bff; } .t-lendaria { color: #ffbe3d; }
+.tierline { margin-top: 4px; text-align: center; }
+.shop-grid { align-items: stretch; }
+.shop-grid li { text-align: center; display: flex; flex-direction: column; }
+.shop-grid .pick { width: 100%; min-width: 0; padding: 0 8px; font-size: .8rem; margin-top: auto; }
+.shop-grid .tierline { margin-bottom: 8px; }
+.shop-grid .pick:disabled { opacity: .55; }
+.sell-list { list-style: none; margin: 0; padding: 0; width: min(560px, 100%); display: flex; flex-direction: column; gap: 8px; }
+.sellrow { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 12px; background: rgba(8, 11, 30, .55); }
+.sinfo { flex: 1; min-width: 0; font-size: .92rem; }
+.scount { font: 600 .9rem var(--font-display); color: var(--gold); }
+.sellrow .btn { min-height: 44px; padding: 0 12px; font-size: .82rem; white-space: nowrap; }
+
 /* ---------- Holográfico ---------- */
 .face { isolation: isolate; }
 .thumb.is-holo { position: relative; isolation: isolate; }
@@ -554,6 +574,7 @@ h1:focus { outline: none; }
     <p class="lead">Toque em uma das <span id="total">22</span> cartas para vê-la de perto. Depois, gire para ler o verso.</p>
     <div class="albumbar" id="albumbar" hidden>
       <button id="open-album" class="btn" type="button">Meu álbum <span class="pill" id="pill-c" aria-hidden="true">0/22</span></button>
+      <button id="open-loja" class="btn" type="button">Loja <span class="pill" id="pill-p" aria-hidden="true">0 pts</span></button>
     </div>
   </header>
   <main id="cartas" tabindex="-1">
@@ -620,6 +641,7 @@ h1:focus { outline: none; }
       <ul class="album-grid" id="album-grid" role="list"></ul>
       <div class="bactions">
         <button id="al-booster" class="btn primary" type="button">Abrir um booster?</button>
+        <button id="al-shop" class="btn" type="button">Loja</button>
         <button id="al-coll" class="btn" type="button">Ver coleção</button>
       </div>
       <button id="al-dbg" class="dbg" type="button" aria-label="Depuração: toque 4 vezes para liberar o próximo booster"></button>
@@ -637,6 +659,36 @@ h1:focus { outline: none; }
         </div>
         <p class="amsg" id="al-msg" role="status"></p>
       </details>
+    </div>
+  </section>
+
+  <section id="screen-loja" class="bscreen ascreen" aria-labelledby="lj-title" hidden>
+    <div class="btop">
+      <button id="lj-back" class="bback" type="button">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+        <span>Coleção</span>
+      </button>
+      <button id="lj-album" class="bback" type="button"><span>Meu álbum</span><span class="pill" id="pill-l" aria-hidden="true">0/22</span></button>
+    </div>
+    <div class="amain">
+      <h2 id="lj-title" class="atitle" tabindex="-1">Loja</h2>
+      <p class="acount"><b id="lj-points">0</b> pontos</p>
+      <p class="anote" id="lj-msg" role="status"></p>
+      <section class="lsec" aria-labelledby="lj-h1">
+        <h3 id="lj-h1">Ofertas da vez</h3>
+        <p class="lnote" id="lj-timer"></p>
+        <ul class="album-grid shop-grid" id="shop-grid" role="list"></ul>
+      </section>
+      <section class="lsec" aria-labelledby="lj-h2">
+        <h3 id="lj-h2">Booster Meteorítico</h3>
+        <p class="lnote">5 cartas sorteadas, e você leva 1. Abre na hora e não mexe na espera do booster gratuito.</p>
+        <button id="lj-buypack" class="btn primary" type="button">Comprar e abrir</button>
+      </section>
+      <section class="lsec" aria-labelledby="lj-h3">
+        <h3 id="lj-h3">Vender repetidas</h3>
+        <p class="lnote" id="sell-note"></p>
+        <ul class="sell-list" id="sell-list" role="list"></ul>
+      </section>
     </div>
   </section>
 
@@ -1172,14 +1224,53 @@ h1:focus { outline: none; }
   scene.addEventListener('pointerup', function (e) { endDrag(e, false); });
   scene.addEventListener('pointercancel', function (e) { endDrag(e, true); });
 
+  /* ---------- Raridades, preços e sorteio ponderado ---------- */
+  var TIERS = {
+    comum:    { nome: 'Comum',     w: 8,   venda: 5 },
+    incomum:  { nome: 'Incomum',   w: 5,   venda: 10 },
+    rara:     { nome: 'Rara',      w: 3,   venda: 25 },
+    epica:    { nome: 'Épica',     w: 1.5, venda: 60 },
+    lendaria: { nome: 'Lendária',  w: 1,   venda: 120 }
+  };
+  var TIER_OF = {};
+  [['comum', 'C01 C02 C03 C04 C05 C06 C07 C08'],
+   ['incomum', 'C09 C10 C11 C16 C17 C21 C20'],
+   ['rara', 'C12 C13 C14 C15 N01'],
+   ['epica', 'C18'],
+   ['lendaria', 'A01']].forEach(function (g) { g[1].split(' ').forEach(function (k) { TIER_OF[k] = g[0]; }); });
+  var BOOSTER_PRICE = 40, BUY_FACTOR = 3, SHOP_SLOT = 15 * 60 * 1000;
+  function tierKey(i) { return TIER_OF[CARDS[i].codigo] || 'comum'; }
+  function tierOf(i) { return TIERS[tierKey(i)]; }
+  function weightOf(i) { return tierOf(i).w; }
+  function sellOf(i) { return tierOf(i).venda; }
+  function buyOf(i) { return tierOf(i).venda * BUY_FACTOR; }
+  function mulberry(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  /* sorteia n cartas diferentes, com chance proporcional ao peso da raridade */
+  function pickWeighted(pool, rnd, n) {
+    pool = pool.slice(); var out = [];
+    while (out.length < n && pool.length) {
+      var tot = 0; pool.forEach(function (i) { tot += weightOf(i); });
+      var x = rnd() * tot, pick = pool.length - 1;
+      for (var q = 0; q < pool.length; q++) { x -= weightOf(pool[q]); if (x < 0) { pick = q; break; } }
+      out.push(pool.splice(pick, 1)[0]);
+    }
+    return out;
+  }
+
   /* ---------- Álbum pessoal (guardado no navegador) ---------- */
   var STORE_KEY = 'cartas-meteoritos-album-v1';
   var WAIT = 30 * 60 * 1000;
-  var album = { owned: {}, packs: 0, next: 0, pending: null, pendingHolo: null, holo: {}, holoOff: {} }, storageOk = true;
+  var album = { owned: {}, packs: 0, next: 0, pending: null, pendingHolo: null, holo: {}, holoOff: {}, points: 0, credits: 0, seed: 0, bought: null }, storageOk = true;
   var KEYS = {}; CARDS.forEach(function (c) { KEYS[c.codigo] = 1; });
 
   function cleanAlbum(o) {
-    var r = { owned: {}, packs: 0, next: 0, pending: null, pendingHolo: null, holo: {}, holoOff: {} };
+    var r = { owned: {}, packs: 0, next: 0, pending: null, pendingHolo: null, holo: {}, holoOff: {}, points: 0, credits: 0, seed: 0, bought: null };
     if (o && typeof o === 'object') {
       var ow = (o.owned && typeof o.owned === 'object') ? o.owned : {};
       Object.keys(ow).forEach(function (k) {
@@ -1194,6 +1285,12 @@ h1:focus { outline: none; }
       if (r.pending) {
         var ph = Array.isArray(o.pendingHolo) ? o.pendingHolo : [];
         r.pendingHolo = [0, 1, 2, 3, 4].map(function (j) { return ph[j] === true; });
+      }
+      var pt = Math.floor(Number(o.points)); if (pt > 0) r.points = Math.min(pt, 999999);
+      var cr = Math.floor(Number(o.credits)); if (cr > 0) r.credits = Math.min(cr, 99);
+      var sd = Math.floor(Number(o.seed)); if (isFinite(sd) && sd > 0) r.seed = sd % 4294967296;
+      if (o.bought && typeof o.bought === 'object' && isFinite(Number(o.bought.slot)) && Array.isArray(o.bought.codes)) {
+        r.bought = { slot: Math.floor(Number(o.bought.slot)), codes: o.bought.codes.filter(function (k) { return KEYS[k] === 1; }) };
       }
       ['holo', 'holoOff'].forEach(function (f) {
         var m = o[f];
@@ -1212,7 +1309,7 @@ h1:focus { outline: none; }
   }
   function ownedCount() { return Object.keys(album.owned).length; }
   function albumCode() {
-    try { return 'MET1-' + btoa(JSON.stringify({ o: album.owned, p: album.packs, h: Object.keys(album.holo) })); } catch (_) { return ''; }
+    try { return 'MET1-' + btoa(JSON.stringify({ o: album.owned, p: album.packs, h: Object.keys(album.holo), s: album.points })); } catch (_) { return ''; }
   }
   function parseCode(txt) {
     try {
@@ -1220,7 +1317,7 @@ h1:focus { outline: none; }
       if (txt.indexOf('MET1-') !== 0) return null;
       var o = JSON.parse(atob(txt.slice(5)));
       var hm = {}; ((o && Array.isArray(o.h)) ? o.h : []).forEach(function (k) { hm[k] = true; });
-      return cleanAlbum({ owned: o && o.o, packs: o && o.p, holo: hm });
+      return cleanAlbum({ owned: o && o.o, packs: o && o.p, holo: hm, points: o && o.s });
     } catch (_) { return null; }
   }
 
@@ -1234,10 +1331,13 @@ h1:focus { outline: none; }
   function refreshCounts() {
     var n = ownedCount(), t = n + '/' + N;
     pillC.textContent = t; pillB.textContent = t;
+    var pts = album.points || 0;
+    if (pillP) { pillP.textContent = pts + ' pts'; pillL.textContent = t; ljPoints.textContent = String(pts); }
+    if (openLojaBtn) openLojaBtn.setAttribute('aria-label', 'Loja, ' + pts + ' pontos');
     openAlbumBtn.setAttribute('aria-label', 'Meu álbum, ' + n + ' de ' + N + ' cartas');
     bsAlbum.setAttribute('aria-label', 'Meu álbum, ' + n + ' de ' + N + ' cartas');
     /* o botão só aparece depois do primeiro booster, para a tela secreta continuar secreta */
-    albumBar.hidden = !(album.packs > 0 || n > 0 || album.pending || (album.next || 0) > Date.now());
+    albumBar.hidden = !(album.packs > 0 || n > 0 || album.points > 0 || album.credits > 0 || album.pending || (album.next || 0) > Date.now());
   }
 
   function renderAlbum() {
@@ -1315,7 +1415,7 @@ h1:focus { outline: none; }
     if (!r) { albumMsg('Esse código não é válido. Confira se copiou tudo, começando por MET1-.'); return; }
     var before = ownedCount();
     Object.keys(r.owned).forEach(function (k) { album.owned[k] = Math.max(album.owned[k] || 0, r.owned[k]); });
-    album.packs = Math.max(album.packs, r.packs);
+    album.packs = Math.max(album.packs, r.packs); album.points = Math.max(album.points || 0, r.points);
     Object.keys(r.holo).forEach(function (k) { album.holo[k] = true; });
     saveAlbum(); refreshCounts(); renderAlbum();
     alPaste.value = '';
@@ -1341,9 +1441,116 @@ h1:focus { outline: none; }
       return;
     }
     disarm();
-    album = { owned: {}, packs: 0, next: album.next, pending: album.pending, pendingHolo: album.pendingHolo, holo: {}, holoOff: {} };
+    album = { owned: {}, packs: 0, next: album.next, pending: album.pending, pendingHolo: album.pendingHolo, holo: {}, holoOff: {}, points: 0, credits: album.credits, seed: album.seed, bought: album.bought };
     saveAlbum(); refreshCounts(); renderAlbum();
     albumMsg('Álbum apagado.');
+  });
+
+
+  /* ---------- Loja ---------- */
+  var screenL = $('#screen-loja'), shopGrid = $('#shop-grid'), sellList = $('#sell-list'), ljPoints = $('#lj-points'), ljMsg = $('#lj-msg');
+  var ljTimer = $('#lj-timer'), buyPack = $('#lj-buypack'), sellNote = $('#sell-note'), pillL = $('#pill-l'), pillP = $('#pill-p');
+  var openLojaBtn = $('#open-loja'), viewShop = null, shownSlot = -1, shopOffers = [];
+  buyPack.textContent = 'Comprar e abrir · ' + BOOSTER_PRICE + ' pts';
+
+  function ljSay(t) { ljMsg.textContent = ''; setTimeout(function () { ljMsg.textContent = t; }, 40); }
+  function shopSlot() { return Math.floor(Date.now() / SHOP_SLOT); }
+  function offersFor(slot) {
+    var rnd = mulberry(((album.seed || 1) ^ Math.imul(slot + 1, 2654435761)) >>> 0);
+    return pickWeighted(CARDS.map(function (_, i) { return i; }), rnd, 3);
+  }
+  function tierSpan(i) { var t = document.createElement('span'); t.className = 'tier t-' + tierKey(i); t.textContent = tierOf(i).nome; return t; }
+
+  function renderShop() {
+    if (!album.seed) { album.seed = 1 + Math.floor(Math.random() * 4294967294); saveAlbum(); }
+    var slot = shopSlot(); shownSlot = slot;
+    if (!album.bought || album.bought.slot !== slot) { album.bought = { slot: slot, codes: [] }; saveAlbum(); }
+    shopOffers = offersFor(slot);
+    shopGrid.textContent = '';
+    shopOffers.forEach(function (i) {
+      var c = CARDS[i], price = buyOf(i), got = album.bought.codes.indexOf(c.codigo) >= 0;
+      var li = document.createElement('li'); li.dataset.slot = String(i);
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'card'; b.dataset.i = String(i);
+      b.setAttribute('aria-haspopup', 'dialog');
+      b.setAttribute('aria-label', c.nome + ', carta ' + c.codigo + ', ' + c.classe + ', raridade ' + tierOf(i).nome);
+      var th = document.createElement('span'); th.className = 'thumb';
+      var im = new Image(); im.src = miniUrl(c); im.alt = ''; im.width = 420; im.height = 588; im.draggable = false;
+      th.appendChild(im);
+      var cap = document.createElement('span'); cap.className = 'cap';
+      var code = document.createElement('b'); code.className = c.tipo; code.textContent = c.codigo;
+      cap.appendChild(code); cap.appendChild(document.createTextNode(c.curto || c.nome));
+      b.appendChild(th); b.appendChild(cap); li.appendChild(b);
+      var tl = document.createElement('div'); tl.className = 'tierline'; tl.appendChild(tierSpan(i)); li.appendChild(tl);
+      var buy = document.createElement('button'); buy.type = 'button'; buy.className = 'btn pick buy'; buy.dataset.i = String(i);
+      buy.textContent = got ? 'Comprada' : 'Comprar · ' + price + ' pts'; buy.disabled = got;
+      buy.setAttribute('aria-label', got ? c.nome + ', já comprada nesta troca de ofertas' : 'Comprar ' + c.nome + ', carta ' + c.codigo + ', raridade ' + tierOf(i).nome + ', por ' + price + ' pontos');
+      li.appendChild(buy);
+      shopGrid.appendChild(li);
+    });
+    viewShop = makeView(shopGrid, shopOffers.slice());
+    refreshShop(); renderSell(); refreshCounts();
+  }
+
+  function renderSell() {
+    sellList.textContent = ''; var any = false;
+    CARDS.forEach(function (c, i) {
+      var n = album.owned[c.codigo] || 0; if (n < 2) return;
+      any = true;
+      var li = document.createElement('li'); li.className = 'sellrow';
+      var info = document.createElement('span'); info.className = 'sinfo';
+      var cd = document.createElement('b'); cd.className = c.tipo; cd.textContent = c.codigo;
+      info.appendChild(cd); info.appendChild(document.createTextNode(' ' + (c.curto || c.nome) + ' ')); info.appendChild(tierSpan(i));
+      var cnt = document.createElement('span'); cnt.className = 'scount'; cnt.textContent = '×' + n; cnt.setAttribute('aria-label', n + ' cópias');
+      var bt = document.createElement('button'); bt.type = 'button'; bt.className = 'btn'; bt.dataset.i = String(i);
+      bt.textContent = 'Vender 1 · +' + sellOf(i);
+      bt.setAttribute('aria-label', 'Vender uma cópia de ' + c.nome + ' por ' + sellOf(i) + ' pontos');
+      li.appendChild(info); li.appendChild(cnt); li.appendChild(bt); sellList.appendChild(li);
+    });
+    sellNote.textContent = any ? 'Você sempre fica com uma cópia de cada carta. Quanto mais rara a carta, mais pontos ela vale.'
+      : 'Você ainda não tem cartas repetidas para vender.';
+  }
+
+  function refreshShop() {
+    if (curScreen !== 'loja') return;
+    var slot = shopSlot();
+    if (slot !== shownSlot) { if (stage.hidden) { renderShop(); sayB('As ofertas da loja mudaram.'); } return; }
+    var t = 'As ofertas trocam em ' + fmtW((slot + 1) * SHOP_SLOT - Date.now());
+    if (ljTimer.textContent !== t) ljTimer.textContent = t;
+  }
+
+  function buyOffer(i) {
+    var c = CARDS[i], price = buyOf(i);
+    if (!album.bought || album.bought.codes.indexOf(c.codigo) >= 0) return;
+    if ((album.points || 0) < price) { ljSay('Pontos insuficientes: faltam ' + (price - album.points) + ' para comprar ' + c.nome + '.'); return; }
+    var had = album.owned[c.codigo] || 0;
+    album.points -= price; album.owned[c.codigo] = Math.min(had + 1, 999); album.bought.codes.push(c.codigo);
+    saveAlbum(); renderShop();
+    var cb = shopGrid.querySelector('li[data-slot="' + i + '"] .card'); if (cb) cb.focus({ preventScroll: true });
+    ljSay('Você comprou ' + c.nome + (had ? ' (já tinha, agora são ' + (had + 1) + ').' : ': carta nova no álbum!') + ' Pontos restantes: ' + album.points + '.');
+  }
+  function sellOne(i) {
+    var c = CARDS[i];
+    if ((album.owned[c.codigo] || 0) < 2) return;
+    album.owned[c.codigo]--; album.points = (album.points || 0) + sellOf(i);
+    saveAlbum(); renderSell(); refreshCounts();
+    var nb = sellList.querySelector('button[data-i="' + i + '"]') || sellList.querySelector('button');
+    if (nb) nb.focus({ preventScroll: true }); else $('#lj-title').focus({ preventScroll: true });
+    ljSay('Vendida 1 cópia de ' + c.nome + ': +' + sellOf(i) + ' pontos. Total: ' + album.points + '.');
+  }
+
+  shopGrid.addEventListener('click', function (e) {
+    var buy = e.target.closest('.buy');
+    if (buy) { buyOffer(Number(buy.dataset.i)); return; }
+    var b = e.target.closest('.card');
+    if (b && viewShop) openCard(Number(b.dataset.i), viewShop);
+  });
+  sellList.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-i]'); if (b) sellOne(Number(b.dataset.i));
+  });
+  buyPack.addEventListener('click', function () {
+    if ((album.points || 0) < BOOSTER_PRICE) { ljSay('Pontos insuficientes: faltam ' + (BOOSTER_PRICE - album.points) + ' para comprar um booster.'); return; }
+    album.points -= BOOSTER_PRICE; album.credits = (album.credits || 0) + 1;
+    saveAlbum(); refreshCounts(); goTo('booster');
   });
 
   loadAlbum(); refreshCounts();
@@ -1351,8 +1558,8 @@ h1:focus { outline: none; }
   /* ---------- Telas: coleção, booster e álbum ---------- */
   var screenC = $('#screen-collection'), screenB = $('#screen-booster'), secret = $('#secret');
   var skipLink = document.querySelector('.skip');
-  var SCREENS = { colecao: screenC, booster: screenB, album: screenA };
-  var HEADS = { colecao: '#page-title', booster: '#bs-title', album: '#al-title' };
+  var SCREENS = { colecao: screenC, booster: screenB, album: screenA, loja: screenL };
+  var HEADS = { colecao: '#page-title', booster: '#bs-title', album: '#al-title', loja: '#lj-title' };
   var curScreen = 'colecao';
 
   function forceClose() {
@@ -1381,7 +1588,8 @@ h1:focus { outline: none; }
     resetBooster();
     disarm();
     if (name === 'album') renderAlbum();
-    if (name === 'booster' && album.pending) restorePending();
+    if (name === 'loja') renderShop();
+    if (name === 'booster') { if (album.pending) restorePending(); else if ((album.credits || 0) > 0) startPack(); }
     refreshCounts(); refreshWait();
     if (focus) $(HEADS[name]).focus({ preventScroll: true });
   }
@@ -1398,19 +1606,19 @@ h1:focus { outline: none; }
   var bState = 'idle';      /* idle | pack | opening | opened */
   var bRun = 0, bAnims = [], pullList = [], pullHolo = [], viewPull = null, chosen = false;
   function pullView() { return makeView(pulled, pullList, function (i) { return !!pullHolo[pullList.indexOf(i)]; }); }
-  var bsWait = $('#bs-wait'), alBooster = $('#al-booster'), lastLeft = 0;
+  var bsWait = $('#bs-wait'), alBooster = $('#al-booster'), lastLeft = 0, curPaid = false;
 
   function fmtW(ms) { var t = Math.ceil(ms / 1000), m = Math.floor(t / 60), q = t % 60; return (m < 10 ? '0' : '') + m + ':' + (q < 10 ? '0' : '') + q; }
   function refreshWait() {
-    var left = Math.max(0, (album.next || 0) - Date.now()), txt = left > 0 ? 'Próximo booster em ' + fmtW(left) : '';
+    var cr = album.credits || 0, left = Math.max(0, (album.next || 0) - Date.now()), txt = left > 0 ? 'Próximo booster em ' + fmtW(left) : '';
     if (bsWait.textContent !== txt) bsWait.textContent = txt;
     bsWait.hidden = left <= 0; bsOpen.disabled = left > 0;
     if (bState === 'opened') {
-      bsAgain.disabled = !chosen || left > 0;
-      var t2 = left > 0 ? txt : 'Abrir um booster?'; if (bsAgain.textContent !== t2) bsAgain.textContent = t2;
+      bsAgain.disabled = !chosen || (left > 0 && cr <= 0);
+      var t2 = cr > 0 ? 'Abrir booster comprado' : left > 0 ? txt : 'Abrir um booster?'; if (bsAgain.textContent !== t2) bsAgain.textContent = t2;
     }
-    var pend = !!album.pending, t3 = pend ? 'Escolher carta do booster aberto' : (left > 0 ? txt : 'Abrir um booster?');
-    alBooster.disabled = left > 0 && !pend;
+    var pend = !!album.pending, t3 = pend ? 'Escolher carta do booster aberto' : cr > 0 ? 'Abrir booster comprado' : (left > 0 ? txt : 'Abrir um booster?');
+    alBooster.disabled = left > 0 && !pend && cr <= 0;
     if (alBooster.textContent !== t3) alBooster.textContent = t3;
     if (lastLeft > 0 && left === 0 && curScreen !== 'colecao') sayB('Seu próximo booster já está disponível.');
     lastLeft = left;
@@ -1477,13 +1685,7 @@ h1:focus { outline: none; }
     });
   })();
 
-  function draw5() {
-    var ids = CARDS.map(function (_, i) { return i; });
-    for (var k = ids.length - 1; k > 0; k--) {
-      var j = Math.floor(Math.random() * (k + 1)), t = ids[k]; ids[k] = ids[j]; ids[j] = t;
-    }
-    return ids.slice(0, 5);
-  }
+  function draw5() { return pickWeighted(CARDS.map(function (_, i) { return i; }), Math.random, 5); }
 
   function buildPulled(list) {
     pulled.textContent = '';
@@ -1532,7 +1734,9 @@ h1:focus { outline: none; }
 
   /* 1) "Abrir booster?": sorteia as 5 cartas e o pacote aparece flutuando */
   async function startPack() {
-    if (bState !== 'idle' || Date.now() < (album.next || 0)) return;
+    var paid = (album.credits || 0) > 0;
+    if (bState !== 'idle' || (!paid && Date.now() < (album.next || 0))) return;
+    curPaid = paid;
     var my = ++bRun;
     bState = 'pack';
     pullList = draw5(); pullHolo = pullList.map(function () { return Math.random() < 0.05; }); buildPulled(pullList); viewPull = pullView();
@@ -1558,7 +1762,8 @@ h1:focus { outline: none; }
     if (bState !== 'pack') return;
     var my = bRun, rm = reduce();
     bState = 'opening';
-    album.next = Date.now() + WAIT; album.pending = pullList.map(function (i) { return CARDS[i].codigo; }); album.pendingHolo = pullHolo.slice();
+    if (curPaid) album.credits = Math.max(0, (album.credits || 0) - 1); else album.next = Date.now() + WAIT;
+    album.pending = pullList.map(function (i) { return CARDS[i].codigo; }); album.pendingHolo = pullHolo.slice();
     saveAlbum(); refreshWait();
     pack.disabled = true; packHint.hidden = true;
     packWrap.style.animationPlayState = 'paused';
@@ -1664,6 +1869,10 @@ h1:focus { outline: none; }
   bsBack.addEventListener('click', function () { goTo('colecao'); });
   secret.addEventListener('click', function () { goTo('booster'); });
   openAlbumBtn.addEventListener('click', function () { goTo('album'); });
+  openLojaBtn.addEventListener('click', function () { goTo('loja'); });
+  $('#al-shop').addEventListener('click', function () { goTo('loja'); });
+  $('#lj-back').addEventListener('click', function () { goTo('colecao'); });
+  $('#lj-album').addEventListener('click', function () { goTo('album'); });
   bsAlbum.addEventListener('click', function () { goTo('album'); });
   $('#bs-album2').addEventListener('click', function () { goTo('album'); });
   $('#al-back').addEventListener('click', function () { goTo('colecao'); });
@@ -1675,7 +1884,7 @@ h1:focus { outline: none; }
     var b = e.target.closest('.card');
     if (b && viewPull) openCard(Number(b.dataset.i), viewPull);
   });
-  setInterval(refreshWait, 1000);
+  setInterval(function () { refreshWait(); refreshShop(); }, 1000);
   if (nameFromHash() !== 'colecao') showScreen(nameFromHash(), false);
   refreshWait(); refreshCounts();
 
